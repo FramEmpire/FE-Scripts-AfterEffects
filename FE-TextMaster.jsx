@@ -1,12 +1,12 @@
 /**
- * FE-TextMaster v2.5 - Professional Text Animation Suite for After Effects
+ * FE-TextMaster v3.0 - Continuous Auto-Loop Preview Motion Suite for After Effects
  * 
  * Powered by FramEmpire | www.framempire.com
  * 
  * Features:
+ * - Continuous 25 FPS Auto-Loop Preview Engine (Powered by AE Task Scheduler)
+ * - Real-Time Animated Preview of "FramEmpire- A Revolution of Animation"
  * - 100 Unique Handcrafted Motion Presets across 10 Categories
- * - Centered Full-Width Live Vector Preview Viewport animating "FramEmpire- A Revolution of Animation"
- * - Dynamic Presets List & Custom Expression Generators
  * - Split Text Engine, Character Anchor Matrix, Case Converter & Text Tools
  */
 
@@ -183,7 +183,6 @@
     // ==========================================
 
     function getPresetExpression(presetName, freq, decay) {
-        // Return unique expression code based on exact preset name
         if (presetName.indexOf("1. Overshoot Elastic Scale") !== -1) {
             return "freq = " + freq + "; decay = " + decay + "; t = time - inPoint; s = 100 + 40 * Math.sin(t * freq * 2 * Math.PI) * Math.exp(-t * decay); [s, s, 100];";
         } else if (presetName.indexOf("2. Gravity Drop Bounce") !== -1) {
@@ -211,14 +210,10 @@
         } else if (presetName.indexOf("81. Fibonacci Scale") !== -1 || presetName.indexOf("82. Damped Harmonic") !== -1) {
             return "freq = " + freq + "; decay = " + decay + "; t = time - inPoint; s = 100 + 50 * (Math.cos(freq * t) / Math.exp(decay * t)); [s, s, 100];";
         } else {
-            // Universal Damped Inertial Bounce
             return "freq = " + freq + "; decay = " + decay + "; t = time - inPoint; y = Math.sin(t * freq * 2 * Math.PI) * -120 * Math.exp(-t * decay); [value[0], value[1] + y, value[2]];";
         }
     }
 
-    /**
-     * Applies chosen preset expression & keyframes to selected Text Layers
-     */
     function applyTextPresetToLayers(presetName, freqVal, decayVal, statusText) {
         var comp = app.project.activeItem;
         if (!comp || !(comp instanceof CompItem)) {
@@ -566,7 +561,7 @@
         var titleText = headerGroup.add("statictext", undefined, "FE-TEXTMASTER");
         titleText.graphics.font = ScriptUI.newFont("sans-serif", "BOLD", 15);
 
-        var subText = headerGroup.add("statictext", undefined, "Live Motion Browser & 100 Text Presets");
+        var subText = headerGroup.add("statictext", undefined, "Continuous Live Motion & 100 Presets");
         subText.graphics.font = ScriptUI.newFont("sans-serif", "REGULAR", 9);
 
         var accentLine = win.add("panel", undefined, undefined);
@@ -577,7 +572,7 @@
         var tabbedPanel = win.add("tabbedpanel", undefined, undefined);
         tabbedPanel.alignChildren = ["fill", "top"];
 
-        // TAB 1: 🚀 LIVE PRESET BROWSER (FULL-WIDTH CENTERED PREVIEW VIEWPORT)
+        // TAB 1: 🚀 LIVE PRESET BROWSER (CONTINUOUS AUTO-LOOP VIEWPORT)
         var tabPresets = tabbedPanel.add("tab", undefined, "🚀 Preset Browser");
         tabPresets.orientation = "column";
         tabPresets.alignChildren = ["fill", "top"];
@@ -609,8 +604,8 @@
         ddlPresets.selection = 0;
         ddlPresets.alignment = ["fill", "center"];
 
-        // 2. FULL-WIDTH LIVE VECTOR ANIMATED PREVIEW VIEWPORT
-        var previewBox = tabPresets.add("panel", undefined, "Live Animation Preview");
+        // 2. FULL-WIDTH LIVE ANIMATED PREVIEW CANVAS
+        var previewBox = tabPresets.add("panel", undefined, "Live Animation Preview (Auto Loop)");
         previewBox.orientation = "column";
         previewBox.alignChildren = ["fill", "top"];
         previewBox.spacing = 4;
@@ -622,29 +617,33 @@
         previewCanvas.startTime = new Date().getTime();
         previewCanvas.activePreset = PRESETS_BY_CATEGORY[PRESET_CATEGORIES[0]][0];
 
-        // Custom Vector Graphics Drawing Engine for Centered Animated Preview
+        // Register Global Handle for AE Background Scheduled Task
+        $.global._feCanvas = previewCanvas;
+
+        // Vector Graphics Drawing Engine for Continuous Live Motion Loop
         previewCanvas.onDraw = function () {
             var g = this.graphics;
             var w = this.bounds.width;
             var h = this.bounds.height;
+            if (w <= 0 || h <= 0) return;
 
-            // Viewport Background (#111111)
+            // Viewport Dark Background (#0D0D0D)
             g.rectPath(0, 0, w, h);
-            var bgBrush = g.newBrush(g.BrushType.SOLID_COLOR, [0.06, 0.06, 0.06, 1]);
+            var bgBrush = g.newBrush(g.BrushType.SOLID_COLOR, [0.05, 0.05, 0.05, 1]);
             g.fillPath(bgBrush);
 
-            // Viewport Border Outline (#2D2D2D)
+            // Viewport Border Outline (#2A2A2A)
             var borderPen = g.newPen(g.PenType.SOLID_COLOR, [0.25, 0.25, 0.25, 1], 1);
             g.strokePath(borderPen);
 
             var sampleText = "FramEmpire- A Revolution of Animation";
             var now = new Date().getTime();
-            var loopDuration = 2200; // 2.2 second loop cycle
-            var t = ((now - this.startTime) % loopDuration) / 1000;
+            var loopDuration = 2000; // 2.0s per loop cycle
+            var t = ((now - this.startTime) % loopDuration) / 1000; // 0.0 to 2.0s
 
             var presetName = this.activePreset || "";
 
-            // Calculate animated parameters
+            // Calculate animated position & parameters
             var textX = 20;
             var textY = h / 2 + 4;
             var textAlpha = 1;
@@ -652,8 +651,13 @@
 
             if (presetName.indexOf("Bounce") !== -1 || presetName.indexOf("Elastic") !== -1 || presetName.indexOf("Overshoot") !== -1 || presetName.indexOf("Pop") !== -1 || presetName.indexOf("Snap") !== -1) {
                 var bProgress = Math.min(t / 1.2, 1);
-                var overshoot = 1 + Math.sin(bProgress * 10) * Math.exp(-bProgress * 4.5);
-                textY = h / 2 + (1 - overshoot) * 22;
+                var overshoot = 1 + Math.sin(bProgress * 12) * Math.exp(-bProgress * 4.5);
+                textY = h / 2 + (1 - overshoot) * 24;
+
+            } else if (presetName.indexOf("Drop") !== -1 || presetName.indexOf("Gravity") !== -1) {
+                var dropT = Math.min(t / 1.4, 1);
+                var dropY = Math.abs(Math.sin(dropT * 8)) * -35 * Math.exp(-dropT * 3);
+                textY = h / 2 + dropY;
 
             } else if (presetName.indexOf("Typewriter") !== -1 || presetName.indexOf("Terminal") !== -1 || presetName.indexOf("Cursor") !== -1) {
                 var charCount = Math.floor(t * 22);
@@ -678,11 +682,11 @@
                 displayText = outStr;
 
             } else if (presetName.indexOf("Wave") !== -1 || presetName.indexOf("Ripple") !== -1 || presetName.indexOf("Sinusoidal") !== -1 || presetName.indexOf("Fluid") !== -1) {
-                textY = h / 2 + Math.sin(t * 8) * 7;
+                textY = h / 2 + Math.sin(t * 8) * 8;
 
             } else if (presetName.indexOf("Wiggle") !== -1 || presetName.indexOf("Jitter") !== -1 || presetName.indexOf("Noise") !== -1) {
-                textX = 20 + (Math.random() - 0.5) * 14 * Math.exp(-t * 2.5);
-                textY = h / 2 + (Math.random() - 0.5) * 8 * Math.exp(-t * 2.5);
+                textX = 20 + (Math.random() - 0.5) * 16 * Math.exp(-t * 2.5);
+                textY = h / 2 + (Math.random() - 0.5) * 10 * Math.exp(-t * 2.5);
 
             } else {
                 var rise = Math.min(t / 0.8, 1);
@@ -884,12 +888,20 @@
             openWebPage("https://www.framempire.com");
         };
 
-        // Continuous Loop Animation Refresher
-        win.onIdle = function () {
-            if (previewCanvas && previewCanvas.visible) {
-                previewCanvas.notify("onDraw");
+        // SCHEDULE CONTINUOUS 25 FPS AUTO-LOOP PREVIEW REFRESH VIA AFTER EFFECTS TASK SCHEDULER
+        try {
+            if ($.global._feTaskId) {
+                app.cancelTask($.global._feTaskId);
             }
-        };
+        } catch (eTaskCancel) {}
+
+        try {
+            $.global._feTaskId = app.scheduleTask(
+                "(function(){ try { if ($.global._feCanvas && $.global._feCanvas.visible) { $.global._feCanvas.notify('onDraw'); } } catch(e){} })();",
+                40,
+                true
+            );
+        } catch (eTaskSched) {}
 
         win.onResize = function () {
             win.layout.resize();
