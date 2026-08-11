@@ -4,10 +4,12 @@ Official After Effects ExtendScript UI Panel powered by **FramEmpire** ([www.fra
 
 ---
 
-## 📥 Download ShapeMaster.jsx
+## 📥 Direct Download Links
 
-- **[View & Download ShapeMaster.jsx on GitHub](https://github.com/FramEmpire/FE-Scripts-AfterEffects/blob/main/ShapeMaster.jsx)**  
-  *(Click `ShapeMaster.jsx` in the repository list above, then click the **Download raw file** button at the top right of the file view).*
+- 📦 **[Click Here to Download ShapeMaster.zip (Direct Download)](https://github.com/FramEmpire/FE-Scripts-AfterEffects/raw/main/ShapeMaster.zip)**  
+  *(Click to automatically download the `.zip` package containing `ShapeMaster.jsx`)*
+
+- 📄 **[View ShapeMaster.jsx Source on GitHub](https://github.com/FramEmpire/FE-Scripts-AfterEffects/blob/main/ShapeMaster.jsx)**
 
 ---
 
@@ -34,7 +36,7 @@ Official After Effects ExtendScript UI Panel powered by **FramEmpire** ([www.fra
 
 ## 🚀 Installation Guide
 
-1. Download **[`ShapeMaster.jsx`](https://github.com/FramEmpire/FE-Scripts-AfterEffects/blob/main/ShapeMaster.jsx)**.
+1. Download **[`ShapeMaster.zip`](https://github.com/FramEmpire/FE-Scripts-AfterEffects/raw/main/ShapeMaster.zip)** and extract `ShapeMaster.jsx`.
 2. Copy `ShapeMaster.jsx` into your After Effects **ScriptUI Panels** directory:
    - **macOS**: `/Applications/Adobe After Effects <version>/Scripts/ScriptUI Panels/`
    - **Windows**: `C:\Program Files\Adobe\Adobe After Effects <version>\Support Files\Scripts\ScriptUI Panels\`
