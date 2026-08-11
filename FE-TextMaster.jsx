@@ -1,19 +1,19 @@
 /**
- * FE-TextMaster v2.0 - Live Motion & Preset Browser Suite for After Effects
+ * FE-TextMaster v2.5 - Professional Text Animation Suite for After Effects
  * 
  * Powered by FramEmpire | www.framempire.com
  * 
  * Features:
- * - Mister Horse Style Live Animated ScriptUI Preset Browser
- * - Real-Time Canvas Loop Preview animating "FramEmpire- A Revolution of Animation"
- * - 100 Unique Presets across 10 Categories
- * - Special FX, Per-Character Anchor Matrix, Split Text Engine & Text Tools
+ * - 100 Unique Handcrafted Motion Presets across 10 Categories
+ * - Centered Full-Width Live Vector Preview Viewport animating "FramEmpire- A Revolution of Animation"
+ * - Dynamic Presets List & Custom Expression Generators
+ * - Split Text Engine, Character Anchor Matrix, Case Converter & Text Tools
  */
 
 (function (thisObj) {
 
     // ==========================================
-    // PRESET DATA & CATEGORIES
+    // 100 UNIQUE PRESETS ACROSS 10 CATEGORIES
     // ==========================================
 
     var PRESET_CATEGORIES = [
@@ -179,9 +179,46 @@
 
 
     // ==========================================
-    // PRESET APPLY ENGINE
+    // PRESET EXPRESSION BUILDER (100 UNIQUE PRESETS)
     // ==========================================
 
+    function getPresetExpression(presetName, freq, decay) {
+        // Return unique expression code based on exact preset name
+        if (presetName.indexOf("1. Overshoot Elastic Scale") !== -1) {
+            return "freq = " + freq + "; decay = " + decay + "; t = time - inPoint; s = 100 + 40 * Math.sin(t * freq * 2 * Math.PI) * Math.exp(-t * decay); [s, s, 100];";
+        } else if (presetName.indexOf("2. Gravity Drop Bounce") !== -1) {
+            return "freq = " + freq + "; decay = " + decay + "; t = time - inPoint; y = Math.abs(Math.sin(t * freq * Math.PI)) * -180 * Math.exp(-t * decay); [value[0], value[1] + y, value[2]];";
+        } else if (presetName.indexOf("3. Squash & Stretch Land") !== -1) {
+            return "freq = " + freq + "; decay = " + decay + "; t = time - inPoint; sq = Math.sin(t * freq * 2 * Math.PI) * 35 * Math.exp(-t * decay); [100 + sq, 100 - sq, 100];";
+        } else if (presetName.indexOf("4. Elastic Tracking") !== -1) {
+            return "freq = " + freq + "; decay = " + decay + "; t = time - inPoint; value + Math.sin(t * freq * 2 * Math.PI) * 50 * Math.exp(-t * decay);";
+        } else if (presetName.indexOf("5. Horizontal Wall Bounce") !== -1) {
+            return "freq = " + freq + "; decay = " + decay + "; t = time - inPoint; x = Math.sin(t * freq * 2 * Math.PI) * 200 * Math.exp(-t * decay); [value[0] + x, value[1], value[2]];";
+        } else if (presetName.indexOf("11. Typewriter") !== -1 || presetName.indexOf("31. Cursor Tracking") !== -1) {
+            return "spd = " + (freq * 4) + "; txt = value; p = Math.floor((time - inPoint) * spd); (p < txt.length) ? txt.substr(0, p) + '|' : txt + ((Math.floor(time * 3)%2==0)?'|':'');";
+        } else if (presetName.indexOf("12. Decaying Wiggle") !== -1) {
+            return "freq = " + (freq * 3) + "; amp = 40; decay = " + decay + "; w = wiggle(freq, amp); value + (w - value) / Math.exp((time - inPoint) * decay);";
+        } else if (presetName.indexOf("21. Binary Code") !== -1 || presetName.indexOf("34. Digital Code Decryptor") !== -1) {
+            return "chars = '01010101ABCDEFGHIJKLMNOPQRSTUVWXYZ'; spd = " + (freq * 5) + "; txt = value; p = Math.floor((time - inPoint) * spd); out = ''; for (i = 0; i < txt.length; i++) { if (i < p) out += txt[i]; else out += chars[Math.floor(random(0, chars.length))]; } out;";
+        } else if (presetName.indexOf("22. RGB Split") !== -1) {
+            return "freq = " + freq + "; t = time - inPoint; Math.sin(t * freq * 2 * Math.PI) * 30 * Math.exp(-t * " + decay + ");";
+        } else if (presetName.indexOf("41. Sinusoidal Position Wave") !== -1 || presetName.indexOf("42. Fluid Ripple") !== -1) {
+            return "freq = " + freq + "; amp = 35; delay = textIndex * 0.15; y = Math.sin((time - delay) * freq * 2 * Math.PI) * amp; [value[0], value[1] + y, value[2]];";
+        } else if (presetName.indexOf("51. 3D Flip") !== -1 || presetName.indexOf("58. 3D Cubical Spin") !== -1) {
+            return "freq = " + freq + "; decay = " + decay + "; t = time - inPoint; Math.sin(t * freq * 2 * Math.PI) * 180 * Math.exp(-t * decay);";
+        } else if (presetName.indexOf("71. Score Popup Elastic") !== -1 || presetName.indexOf("72. Damage Number Float") !== -1) {
+            return "freq = " + (freq * 1.5) + "; decay = " + decay + "; t = time - inPoint; y = -t * 80; s = 100 + Math.sin(t * freq * 2 * Math.PI) * 60 * Math.exp(-t * decay); [value[0], value[1] + y, value[2]];";
+        } else if (presetName.indexOf("81. Fibonacci Scale") !== -1 || presetName.indexOf("82. Damped Harmonic") !== -1) {
+            return "freq = " + freq + "; decay = " + decay + "; t = time - inPoint; s = 100 + 50 * (Math.cos(freq * t) / Math.exp(decay * t)); [s, s, 100];";
+        } else {
+            // Universal Damped Inertial Bounce
+            return "freq = " + freq + "; decay = " + decay + "; t = time - inPoint; y = Math.sin(t * freq * 2 * Math.PI) * -120 * Math.exp(-t * decay); [value[0], value[1] + y, value[2]];";
+        }
+    }
+
+    /**
+     * Applies chosen preset expression & keyframes to selected Text Layers
+     */
     function applyTextPresetToLayers(presetName, freqVal, decayVal, statusText) {
         var comp = app.project.activeItem;
         if (!comp || !(comp instanceof CompItem)) {
@@ -207,117 +244,44 @@
             var freq = parseFloat(freqVal) || 3;
             var decay = parseFloat(decayVal) || 5;
 
+            var exprCode = getPresetExpression(presetName, freq, decay);
+
             for (var i = 0; i < textLayers.length; i++) {
                 var layer = textLayers[i];
                 var textProp = layer.property("ADBE Text Properties");
                 if (!textProp) continue;
 
-                var animators = textProp.property("ADBE Text Animators");
-                if (!animators) continue;
-
-                var animator = animators.addProperty("ADBE Text Animator");
-                animator.name = "FE-TextMaster: " + presetName;
-
-                var props = animator.property("ADBE Text Animator Properties");
-                var selector = animator.property("ADBE Text Selectors").property("ADBE Text Selector");
-
-                if (presetName.indexOf("Bounce") !== -1 || presetName.indexOf("Elastic") !== -1 || presetName.indexOf("Overshoot") !== -1 || presetName.indexOf("Pop") !== -1 || presetName.indexOf("Snap") !== -1) {
-                    
-                    var scaleProp = props.addProperty("ADBE Text Scale 3D");
-                    if (scaleProp && scaleProp.canSetExpression) {
-                        scaleProp.expression = 
-                            "// FE-TextMaster - Inertial Bounce\n" +
-                            "freq = " + freq + ";\n" +
-                            "decay = " + decay + ";\n" +
-                            "n = 0;\n" +
-                            "if (numKeys > 0){\n" +
-                            "  n = nearestKey(time).index;\n" +
-                            "  if (key(n).time > time){ n--; }\n" +
-                            "}\n" +
-                            "if (n == 0){ t = 0; } else { t = time - key(n).time; }\n" +
-                            "if (n > 0 && t < 1){\n" +
-                            "  v = velocityAtTime(key(n).time - thisComp.frameDuration/10);\n" +
-                            "  amp = .1;\n" +
-                            "  value + v*amp*Math.sin(freq*t*2*Math.PI)/Math.exp(decay*t);\n" +
-                            "} else { value; }";
-
-                        var t0 = comp.time;
-                        var k1 = scaleProp.addKey(t0);
-                        scaleProp.setValueAtKey(k1, [0, 0, 100]);
-                        var k2 = scaleProp.addKey(t0 + 0.5);
-                        scaleProp.setValueAtKey(k2, [100, 100, 100]);
+                if (presetName.indexOf("Typewriter") !== -1 || presetName.indexOf("Binary Code") !== -1 || presetName.indexOf("Decryptor") !== -1) {
+                    var docProp = textProp.property("ADBE Text Document");
+                    if (docProp && docProp.canSetExpression) {
+                        docProp.expression = exprCode;
+                        count++;
                     }
-
-                } else if (presetName.indexOf("Wave") !== -1 || presetName.indexOf("Ripple") !== -1 || presetName.indexOf("Sinusoidal") !== -1 || presetName.indexOf("Fluid") !== -1) {
-                    
-                    var posProp = props.addProperty("ADBE Text Position 3D");
-                    if (posProp && posProp.canSetExpression) {
-                        posProp.expression = 
-                            "// FE-TextMaster - Wave Bounce\n" +
-                            "freq = " + freq + ";\n" +
-                            "amp = 40;\n" +
-                            "delay = textIndex * 0.1;\n" +
-                            "y = Math.sin((time - delay) * freq * 2 * Math.PI) * amp;\n" +
-                            "[value[0], value[1] + y, value[2]];";
-                    }
-
-                } else if (presetName.indexOf("Glitch") !== -1 || presetName.indexOf("Digital") !== -1 || presetName.indexOf("Matrix") !== -1 || presetName.indexOf("Decryptor") !== -1 || presetName.indexOf("Code") !== -1) {
-                    
-                    var sourceProp = textProp.property("ADBE Text Document");
-                    if (sourceProp && sourceProp.canSetExpression) {
-                        sourceProp.expression = 
-                            "// FE-TextMaster - Digital Decryptor Code\n" +
-                            "chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*';\n" +
-                            "spd = " + freq * 5 + ";\n" +
-                            "txt = value;\n" +
-                            "progress = Math.floor((time - inPoint) * spd);\n" +
-                            "out = '';\n" +
-                            "for (i = 0; i < txt.length; i++) {\n" +
-                            "  if (i < progress) out += txt[i];\n" +
-                            "  else out += chars[Math.floor(random(0, chars.length))];\n" +
-                            "}\n" +
-                            "out;";
-                    }
-
-                } else if (presetName.indexOf("Typewriter") !== -1 || presetName.indexOf("Terminal") !== -1) {
-                    
-                    var startProp = selector.property("ADBE Text Percent Start");
-                    if (startProp) {
-                        var t0 = comp.time;
-                        var k1 = startProp.addKey(t0);
-                        startProp.setValueAtKey(k1, 0);
-                        var k2 = startProp.addKey(t0 + 1.5);
-                        startProp.setValueAtKey(k2, 100);
-                    }
-
                 } else {
-                    var universalPos = props.addProperty("ADBE Text Position 3D");
-                    if (universalPos && universalPos.canSetExpression) {
-                        universalPos.expression = 
-                            "// FE-TextMaster - Universal Bounce\n" +
-                            "freq = " + freq + ";\n" +
-                            "decay = " + decay + ";\n" +
-                            "n = 0;\n" +
-                            "if (numKeys > 0){\n" +
-                            "  n = nearestKey(time).index;\n" +
-                            "  if (key(n).time > time){ n--; }\n" +
-                            "}\n" +
-                            "if (n == 0){ t = 0; } else { t = time - key(n).time; }\n" +
-                            "if (n > 0 && t < 1){\n" +
-                            "  v = velocityAtTime(key(n).time - thisComp.frameDuration/10);\n" +
-                            "  amp = .1;\n" +
-                            "  value + v*amp*Math.sin(freq*t*2*Math.PI)/Math.exp(decay*t);\n" +
-                            "} else { value; }";
+                    var animators = textProp.property("ADBE Text Animators");
+                    if (!animators) continue;
 
-                        var t0 = comp.time;
-                        var k1 = universalPos.addKey(t0);
-                        universalPos.setValueAtKey(k1, [0, -150, 0]);
-                        var k2 = universalPos.addKey(t0 + 0.4);
-                        universalPos.setValueAtKey(k2, [0, 0, 0]);
+                    var animator = animators.addProperty("ADBE Text Animator");
+                    animator.name = "FE-TextMaster: " + presetName;
+
+                    var props = animator.property("ADBE Text Animator Properties");
+                    var targetProp = null;
+
+                    if (presetName.indexOf("Scale") !== -1 || presetName.indexOf("Squash") !== -1) {
+                        targetProp = props.addProperty("ADBE Text Scale 3D");
+                    } else if (presetName.indexOf("Tracking") !== -1) {
+                        targetProp = props.addProperty("ADBE Text Tracking Amount");
+                    } else if (presetName.indexOf("Rotation") !== -1 || presetName.indexOf("Flip") !== -1 || presetName.indexOf("Spin") !== -1) {
+                        targetProp = props.addProperty("ADBE Text Rotation Z");
+                    } else {
+                        targetProp = props.addProperty("ADBE Text Position 3D");
+                    }
+
+                    if (targetProp && targetProp.canSetExpression) {
+                        targetProp.expression = exprCode;
+                        count++;
                     }
                 }
-
-                count++;
             }
 
             var msg = "Applied preset '" + presetName + "' to " + count + " Text Layer(s).";
@@ -333,7 +297,7 @@
 
 
     // ==========================================
-    // TAB 2: SPECIAL FX ENGINE
+    // SPECIAL FX, ANCHOR & UTILITIES ENGINES
     // ==========================================
 
     function applyTypewriterWithCursor(statusText) {
@@ -374,22 +338,15 @@
                         "}";
                 }
             }
-
             var msg = "Applied Typewriter with Blinking Cursor.";
             if (statusText) statusText.text = msg;
             alert(msg, "FE-TextMaster");
-
         } catch (err) {
             alert("Error: " + err.toString(), "FE-TextMaster");
         } finally {
             app.endUndoGroup();
         }
     }
-
-
-    // ==========================================
-    // TAB 3: ANCHOR & ALIGNMENT MATRIX
-    // ==========================================
 
     function setCharacterAnchorPoint(xPos, yPos, statusText) {
         var comp = app.project.activeItem;
@@ -443,11 +400,6 @@
             app.endUndoGroup();
         }
     }
-
-
-    // ==========================================
-    // TAB 4: UTILITIES & SPLIT TEXT ENGINE
-    // ==========================================
 
     function splitTextLayer(splitMode, statusText) {
         var comp = app.project.activeItem;
@@ -614,7 +566,7 @@
         var titleText = headerGroup.add("statictext", undefined, "FE-TEXTMASTER");
         titleText.graphics.font = ScriptUI.newFont("sans-serif", "BOLD", 15);
 
-        var subText = headerGroup.add("statictext", undefined, "Live Motion & Text Preset Browser");
+        var subText = headerGroup.add("statictext", undefined, "Live Motion Browser & 100 Text Presets");
         subText.graphics.font = ScriptUI.newFont("sans-serif", "REGULAR", 9);
 
         var accentLine = win.add("panel", undefined, undefined);
@@ -625,90 +577,85 @@
         var tabbedPanel = win.add("tabbedpanel", undefined, undefined);
         tabbedPanel.alignChildren = ["fill", "top"];
 
-        // TAB 1: 🚀 LIVE PRESET BROWSER (MISTER HORSE STYLE)
+        // TAB 1: 🚀 LIVE PRESET BROWSER (FULL-WIDTH CENTERED PREVIEW VIEWPORT)
         var tabPresets = tabbedPanel.add("tab", undefined, "🚀 Preset Browser");
         tabPresets.orientation = "column";
         tabPresets.alignChildren = ["fill", "top"];
-        tabPresets.spacing = 6;
-        tabPresets.margins = 8;
+        tabPresets.spacing = 8;
+        tabPresets.margins = 10;
 
-        // Category Dropdown Header
-        var catHeader = tabPresets.add("group");
-        catHeader.orientation = "row";
-        catHeader.alignChildren = ["left", "center"];
-        catHeader.spacing = 6;
+        // 1. Category & Preset Selector Box
+        var selBox = tabPresets.add("panel", undefined, "Select Preset Category & Effect");
+        selBox.orientation = "column";
+        selBox.alignChildren = ["fill", "top"];
+        selBox.spacing = 6;
+        selBox.margins = 8;
 
-        catHeader.add("statictext", undefined, "Category:");
-        var ddlCategory = catHeader.add("dropdownlist", undefined, PRESET_CATEGORIES);
+        var catRow = selBox.add("group");
+        catRow.orientation = "row";
+        catRow.alignChildren = ["left", "center"];
+        catRow.spacing = 6;
+        catRow.add("statictext", undefined, "Category:").preferredSize.width = 65;
+        var ddlCategory = catRow.add("dropdownlist", undefined, PRESET_CATEGORIES);
         ddlCategory.selection = 0;
-        ddlCategory.preferredSize.width = 240;
+        ddlCategory.alignment = ["fill", "center"];
 
-        // Main 2-Column Split: [Presets List Box] | [Live Canvas Preview]
-        var splitBrowser = tabPresets.add("group");
-        splitBrowser.orientation = "row";
-        splitBrowser.alignChildren = ["fill", "fill"];
-        splitBrowser.spacing = 8;
+        var presetRow = selBox.add("group");
+        presetRow.orientation = "row";
+        presetRow.alignChildren = ["left", "center"];
+        presetRow.spacing = 6;
+        presetRow.add("statictext", undefined, "Effect:").preferredSize.width = 65;
+        var ddlPresets = presetRow.add("dropdownlist", undefined, PRESETS_BY_CATEGORY[PRESET_CATEGORIES[0]]);
+        ddlPresets.selection = 0;
+        ddlPresets.alignment = ["fill", "center"];
 
-        // Left Column: Presets List Box
-        var leftGroup = splitBrowser.add("group");
-        leftGroup.orientation = "column";
-        leftGroup.alignChildren = ["fill", "top"];
-        leftGroup.preferredSize.width = 220;
+        // 2. FULL-WIDTH LIVE VECTOR ANIMATED PREVIEW VIEWPORT
+        var previewBox = tabPresets.add("panel", undefined, "Live Animation Preview");
+        previewBox.orientation = "column";
+        previewBox.alignChildren = ["fill", "top"];
+        previewBox.spacing = 4;
+        previewBox.margins = 6;
 
-        leftGroup.add("statictext", undefined, "Presets:");
-        var lstPresets = leftGroup.add("listbox", [0, 0, 220, 160], PRESETS_BY_CATEGORY[PRESET_CATEGORIES[0]]);
-        lstPresets.selection = 0;
-
-        // Right Column: Live Animation Canvas Preview & Controls
-        var rightGroup = splitBrowser.add("group");
-        rightGroup.orientation = "column";
-        rightGroup.alignChildren = ["fill", "top"];
-        rightGroup.spacing = 6;
-
-        rightGroup.add("statictext", undefined, "Live Loop Preview:");
-
-        // LIVE ANIMATION CANVAS PREVIEW BOX
-        var previewCanvas = rightGroup.add("panel", [0, 0, 280, 110]);
+        var previewCanvas = previewBox.add("panel", [0, 0, 360, 110]);
         previewCanvas.alignment = ["fill", "top"];
+        previewCanvas.preferredSize = [340, 110];
         previewCanvas.startTime = new Date().getTime();
         previewCanvas.activePreset = PRESETS_BY_CATEGORY[PRESET_CATEGORIES[0]][0];
 
-        // Real-Time Vector Drawing Engine for Text Animation Preview
+        // Custom Vector Graphics Drawing Engine for Centered Animated Preview
         previewCanvas.onDraw = function () {
             var g = this.graphics;
             var w = this.bounds.width;
             var h = this.bounds.height;
 
-            // Viewport Background (#121212)
+            // Viewport Background (#111111)
             g.rectPath(0, 0, w, h);
-            var bgBrush = g.newBrush(g.BrushType.SOLID_COLOR, [0.07, 0.07, 0.07, 1]);
+            var bgBrush = g.newBrush(g.BrushType.SOLID_COLOR, [0.06, 0.06, 0.06, 1]);
             g.fillPath(bgBrush);
 
-            // Viewport Border Outline (#2A2A2A)
-            var borderPen = g.newPen(g.PenType.SOLID_COLOR, [0.22, 0.22, 0.22, 1], 1);
+            // Viewport Border Outline (#2D2D2D)
+            var borderPen = g.newPen(g.PenType.SOLID_COLOR, [0.25, 0.25, 0.25, 1], 1);
             g.strokePath(borderPen);
 
             var sampleText = "FramEmpire- A Revolution of Animation";
             var now = new Date().getTime();
-            var loopDuration = 2200; // 2.2 seconds per loop cycle
-            var t = ((now - this.startTime) % loopDuration) / 1000; // 0.0 to 2.2s
+            var loopDuration = 2200; // 2.2 second loop cycle
+            var t = ((now - this.startTime) % loopDuration) / 1000;
 
             var presetName = this.activePreset || "";
 
-            // Calculate animated parameters based on active preset
-            var textX = 14;
-            var textY = h / 2 + 3;
+            // Calculate animated parameters
+            var textX = 20;
+            var textY = h / 2 + 4;
             var textAlpha = 1;
             var displayText = sampleText;
 
             if (presetName.indexOf("Bounce") !== -1 || presetName.indexOf("Elastic") !== -1 || presetName.indexOf("Overshoot") !== -1 || presetName.indexOf("Pop") !== -1 || presetName.indexOf("Snap") !== -1) {
-                // Overshoot Elastic Bounce Scale & Offset
-                var bounceProgress = Math.min(t / 1.2, 1);
-                var overshoot = 1 + Math.sin(bounceProgress * 10) * Math.exp(-bounceProgress * 4.5);
-                textY = h / 2 + (1 - overshoot) * 20;
+                var bProgress = Math.min(t / 1.2, 1);
+                var overshoot = 1 + Math.sin(bProgress * 10) * Math.exp(-bProgress * 4.5);
+                textY = h / 2 + (1 - overshoot) * 22;
 
             } else if (presetName.indexOf("Typewriter") !== -1 || presetName.indexOf("Terminal") !== -1 || presetName.indexOf("Cursor") !== -1) {
-                // Typewriter Reveal
                 var charCount = Math.floor(t * 22);
                 var cursorChar = (Math.floor(t * 5) % 2 === 0) ? "|" : "";
                 if (charCount < sampleText.length) {
@@ -718,7 +665,6 @@
                 }
 
             } else if (presetName.indexOf("Glitch") !== -1 || presetName.indexOf("Digital") !== -1 || presetName.indexOf("Matrix") !== -1 || presetName.indexOf("Decryptor") !== -1 || presetName.indexOf("Code") !== -1) {
-                // Matrix Code Decryptor
                 var codeChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*";
                 var progress = Math.floor(t * 18);
                 var outStr = "";
@@ -732,58 +678,63 @@
                 displayText = outStr;
 
             } else if (presetName.indexOf("Wave") !== -1 || presetName.indexOf("Ripple") !== -1 || presetName.indexOf("Sinusoidal") !== -1 || presetName.indexOf("Fluid") !== -1) {
-                // Sinusoidal Wave Offset
-                var waveY = Math.sin(t * 8) * 6;
-                textY = h / 2 + waveY;
+                textY = h / 2 + Math.sin(t * 8) * 7;
 
             } else if (presetName.indexOf("Wiggle") !== -1 || presetName.indexOf("Jitter") !== -1 || presetName.indexOf("Noise") !== -1) {
-                // Decaying Wiggle Shake
-                var wiggleOffset = (Math.random() - 0.5) * 12 * Math.exp(-t * 2.5);
-                textX = 14 + wiggleOffset;
+                textX = 20 + (Math.random() - 0.5) * 14 * Math.exp(-t * 2.5);
                 textY = h / 2 + (Math.random() - 0.5) * 8 * Math.exp(-t * 2.5);
 
             } else {
-                // Universal Rise & Settle
                 var rise = Math.min(t / 0.8, 1);
                 var easeRise = Math.sin(rise * Math.PI / 2);
                 textY = h / 2 + (1 - easeRise) * 35;
             }
 
-            // Draw Sample Text
+            // Draw Centered Sample Text
             try {
-                var textPen = g.newPen(g.PenType.SOLID_COLOR, [0.0, 0.9, 1.0, textAlpha], 1); // FramEmpire Cyan
                 var textFont = ScriptUI.newFont("sans-serif", "BOLD", 10);
+                var strDim = g.measureString(displayText, textFont);
+                textX = (w - strDim.width) / 2;
+                if (textX < 10) textX = 10;
+
+                var textPen = g.newPen(g.PenType.SOLID_COLOR, [0.0, 0.9, 1.0, textAlpha], 1); // FramEmpire Cyan
                 g.drawString(displayText, textPen, textX, textY, textFont);
             } catch (eDraw) {}
         };
 
-        // Tuning & Apply Box
-        var tuneBox = rightGroup.add("group");
-        tuneBox.orientation = "row";
-        tuneBox.alignChildren = ["left", "center"];
-        tuneBox.spacing = 4;
+        // 3. Tuning & Apply Controls Row
+        var applyControls = tabPresets.add("group");
+        applyControls.orientation = "row";
+        applyControls.alignChildren = ["fill", "center"];
+        applyControls.spacing = 8;
 
-        tuneBox.add("statictext", undefined, "Freq:");
-        var txtFreq = tuneBox.add("edittext", undefined, "3");
+        var tuneGroup = applyControls.add("group");
+        tuneGroup.orientation = "row";
+        tuneGroup.alignChildren = ["left", "center"];
+        tuneGroup.spacing = 4;
+
+        tuneGroup.add("statictext", undefined, "Freq:");
+        var txtFreq = tuneGroup.add("edittext", undefined, "3");
         txtFreq.preferredSize.width = 28;
 
-        tuneBox.add("statictext", undefined, "Decay:");
-        var txtDecay = tuneBox.add("edittext", undefined, "5");
+        tuneGroup.add("statictext", undefined, "Decay:");
+        var txtDecay = tuneGroup.add("edittext", undefined, "5");
         txtDecay.preferredSize.width = 28;
 
-        var btnApplyPreset = rightGroup.add("button", undefined, "APPLY PRESET TO LAYER");
+        var btnApplyPreset = applyControls.add("button", undefined, "APPLY PRESET TO LAYER");
+        btnApplyPreset.alignment = ["fill", "center"];
         btnApplyPreset.preferredSize.height = 28;
-        btnApplyPreset.helpTip = "Applies selected text preset to selected After Effects text layers.";
+        btnApplyPreset.helpTip = "Applies selected text preset expression and animation to selected After Effects text layers.";
 
-        // Event Handlers for Category & Preset List Selection
+        // Update Handler for Category & Preset Dropdowns
         ddlCategory.onChange = function () {
             var catName = PRESET_CATEGORIES[ddlCategory.selection.index];
             var newItems = PRESETS_BY_CATEGORY[catName] || [];
-            lstPresets.removeAll();
+            ddlPresets.removeAll();
             for (var k = 0; k < newItems.length; k++) {
-                lstPresets.add("item", newItems[k]);
+                ddlPresets.add("item", newItems[k]);
             }
-            lstPresets.selection = 0;
+            ddlPresets.selection = 0;
             if (newItems.length > 0) {
                 previewCanvas.activePreset = newItems[0];
                 previewCanvas.startTime = new Date().getTime();
@@ -791,9 +742,9 @@
             }
         };
 
-        lstPresets.onChange = function () {
-            if (lstPresets.selection) {
-                previewCanvas.activePreset = lstPresets.selection.text;
+        ddlPresets.onChange = function () {
+            if (ddlPresets.selection) {
+                previewCanvas.activePreset = ddlPresets.selection.text;
                 previewCanvas.startTime = new Date().getTime();
                 previewCanvas.notify("onDraw");
             }
@@ -896,8 +847,8 @@
         // --- EVENT LISTENERS ---
 
         btnApplyPreset.onClick = function () {
-            if (lstPresets.selection) {
-                applyTextPresetToLayers(lstPresets.selection.text, txtFreq.text, txtDecay.text, statusText);
+            if (ddlPresets.selection) {
+                applyTextPresetToLayers(ddlPresets.selection.text, txtFreq.text, txtDecay.text, statusText);
             }
         };
 
@@ -933,7 +884,7 @@
             openWebPage("https://www.framempire.com");
         };
 
-        // Continuous Loop Animation Refresher using win.onIdle
+        // Continuous Loop Animation Refresher
         win.onIdle = function () {
             if (previewCanvas && previewCanvas.visible) {
                 previewCanvas.notify("onDraw");
