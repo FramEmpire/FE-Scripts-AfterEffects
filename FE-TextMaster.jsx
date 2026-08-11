@@ -1,20 +1,19 @@
 /**
- * FE-TextMaster v1.0 - Professional Text Animation & Preset Engine for After Effects
+ * FE-TextMaster v2.0 - Live Motion & Preset Browser Suite for After Effects
  * 
  * Powered by FramEmpire | www.framempire.com
  * 
- * Core Features:
- * - 100 Unique Text Animation Presets across 10 Categories
- * - Inertial Bounce, Elastic, Glitch, HUD, Wave, 3D, Physics & Corporate Engines
- * - Text Splitter (by Characters, Words, Lines)
- * - Per-Character Anchor Point Snapper & Alignment Matrix
- * - Case Converter & Text Utilities
+ * Features:
+ * - Mister Horse Style Live Animated ScriptUI Preset Browser
+ * - Real-Time Canvas Loop Preview animating "FramEmpire- A Revolution of Animation"
+ * - 100 Unique Presets across 10 Categories
+ * - Special FX, Per-Character Anchor Matrix, Split Text Engine & Text Tools
  */
 
 (function (thisObj) {
 
     // ==========================================
-    // PRESET DEFINITIONS (100 PRESETS / 10 CATEGORIES)
+    // PRESET DATA & CATEGORIES
     // ==========================================
 
     var PRESET_CATEGORIES = [
@@ -216,14 +215,12 @@
                 var animators = textProp.property("ADBE Text Animators");
                 if (!animators) continue;
 
-                // Add Text Animator for Preset
                 var animator = animators.addProperty("ADBE Text Animator");
                 animator.name = "FE-TextMaster: " + presetName;
 
                 var props = animator.property("ADBE Text Animator Properties");
                 var selector = animator.property("ADBE Text Selectors").property("ADBE Text Selector");
 
-                // Configure preset expressions / properties based on category/preset
                 if (presetName.indexOf("Bounce") !== -1 || presetName.indexOf("Elastic") !== -1 || presetName.indexOf("Overshoot") !== -1 || presetName.indexOf("Pop") !== -1 || presetName.indexOf("Snap") !== -1) {
                     
                     var scaleProp = props.addProperty("ADBE Text Scale 3D");
@@ -244,7 +241,6 @@
                             "  value + v*amp*Math.sin(freq*t*2*Math.PI)/Math.exp(decay*t);\n" +
                             "} else { value; }";
 
-                        // Add keyframes to Scale property
                         var t0 = comp.time;
                         var k1 = scaleProp.addKey(t0);
                         scaleProp.setValueAtKey(k1, [0, 0, 100]);
@@ -294,21 +290,7 @@
                         startProp.setValueAtKey(k2, 100);
                     }
 
-                } else if (presetName.indexOf("Wiggle") !== -1 || presetName.indexOf("Jitter") !== -1 || presetName.indexOf("Noise") !== -1) {
-
-                    var posWiggle = props.addProperty("ADBE Text Position 3D");
-                    if (posWiggle && posWiggle.canSetExpression) {
-                        posWiggle.expression = 
-                            "// FE-TextMaster - Decaying Wiggle\n" +
-                            "freq = " + freq * 4 + ";\n" +
-                            "amp = 30;\n" +
-                            "decay = " + decay + ";\n" +
-                            "w = wiggle(freq, amp);\n" +
-                            "value + (w - value) / Math.exp((time - inPoint) * decay);";
-                    }
-
                 } else {
-                    // Universal Overshoot/Bounce Fallback
                     var universalPos = props.addProperty("ADBE Text Position 3D");
                     if (universalPos && universalPos.canSetExpression) {
                         universalPos.expression = 
@@ -381,7 +363,7 @@
                 if (sourceProp && sourceProp.canSetExpression) {
                     sourceProp.expression = 
                         "// Typewriter with Blinking Cursor\n" +
-                        "spd = 15; // characters per second\n" +
+                        "spd = 15;\n" +
                         "txt = value;\n" +
                         "progress = Math.floor((time - inPoint) * spd);\n" +
                         "cursor = (Math.floor(time * 3) % 2 == 0) ? '|' : '';\n" +
@@ -632,7 +614,7 @@
         var titleText = headerGroup.add("statictext", undefined, "FE-TEXTMASTER");
         titleText.graphics.font = ScriptUI.newFont("sans-serif", "BOLD", 15);
 
-        var subText = headerGroup.add("statictext", undefined, "100 Text Animation Presets & Toolkit");
+        var subText = headerGroup.add("statictext", undefined, "Live Motion & Text Preset Browser");
         subText.graphics.font = ScriptUI.newFont("sans-serif", "REGULAR", 9);
 
         var accentLine = win.add("panel", undefined, undefined);
@@ -643,52 +625,180 @@
         var tabbedPanel = win.add("tabbedpanel", undefined, undefined);
         tabbedPanel.alignChildren = ["fill", "top"];
 
-        // TAB 1: 🚀 100 PRESETS ENGINE
-        var tabPresets = tabbedPanel.add("tab", undefined, "🚀 Presets Engine");
+        // TAB 1: 🚀 LIVE PRESET BROWSER (MISTER HORSE STYLE)
+        var tabPresets = tabbedPanel.add("tab", undefined, "🚀 Preset Browser");
         tabPresets.orientation = "column";
         tabPresets.alignChildren = ["fill", "top"];
-        tabPresets.spacing = 8;
-        tabPresets.margins = 10;
+        tabPresets.spacing = 6;
+        tabPresets.margins = 8;
 
-        var catGroup = tabPresets.add("group");
-        catGroup.orientation = "column";
-        catGroup.alignChildren = ["fill", "top"];
-        catGroup.spacing = 4;
+        // Category Dropdown Header
+        var catHeader = tabPresets.add("group");
+        catHeader.orientation = "row";
+        catHeader.alignChildren = ["left", "center"];
+        catHeader.spacing = 6;
 
-        catGroup.add("statictext", undefined, "Category:");
-        var ddlCategory = catGroup.add("dropdownlist", undefined, PRESET_CATEGORIES);
+        catHeader.add("statictext", undefined, "Category:");
+        var ddlCategory = catHeader.add("dropdownlist", undefined, PRESET_CATEGORIES);
         ddlCategory.selection = 0;
+        ddlCategory.preferredSize.width = 240;
 
-        catGroup.add("statictext", undefined, "Preset:");
-        var ddlPresets = catGroup.add("dropdownlist", undefined, PRESETS_BY_CATEGORY[PRESET_CATEGORIES[0]]);
-        ddlPresets.selection = 0;
+        // Main 2-Column Split: [Presets List Box] | [Live Canvas Preview]
+        var splitBrowser = tabPresets.add("group");
+        splitBrowser.orientation = "row";
+        splitBrowser.alignChildren = ["fill", "fill"];
+        splitBrowser.spacing = 8;
 
+        // Left Column: Presets List Box
+        var leftGroup = splitBrowser.add("group");
+        leftGroup.orientation = "column";
+        leftGroup.alignChildren = ["fill", "top"];
+        leftGroup.preferredSize.width = 220;
+
+        leftGroup.add("statictext", undefined, "Presets:");
+        var lstPresets = leftGroup.add("listbox", [0, 0, 220, 160], PRESETS_BY_CATEGORY[PRESET_CATEGORIES[0]]);
+        lstPresets.selection = 0;
+
+        // Right Column: Live Animation Canvas Preview & Controls
+        var rightGroup = splitBrowser.add("group");
+        rightGroup.orientation = "column";
+        rightGroup.alignChildren = ["fill", "top"];
+        rightGroup.spacing = 6;
+
+        rightGroup.add("statictext", undefined, "Live Loop Preview:");
+
+        // LIVE ANIMATION CANVAS PREVIEW BOX
+        var previewCanvas = rightGroup.add("panel", [0, 0, 280, 110]);
+        previewCanvas.alignment = ["fill", "top"];
+        previewCanvas.startTime = new Date().getTime();
+        previewCanvas.activePreset = PRESETS_BY_CATEGORY[PRESET_CATEGORIES[0]][0];
+
+        // Real-Time Vector Drawing Engine for Text Animation Preview
+        previewCanvas.onDraw = function () {
+            var g = this.graphics;
+            var w = this.bounds.width;
+            var h = this.bounds.height;
+
+            // Viewport Background (#121212)
+            g.rectPath(0, 0, w, h);
+            var bgBrush = g.newBrush(g.BrushType.SOLID_COLOR, [0.07, 0.07, 0.07, 1]);
+            g.fillPath(bgBrush);
+
+            // Viewport Border Outline (#2A2A2A)
+            var borderPen = g.newPen(g.PenType.SOLID_COLOR, [0.22, 0.22, 0.22, 1], 1);
+            g.strokePath(borderPen);
+
+            var sampleText = "FramEmpire- A Revolution of Animation";
+            var now = new Date().getTime();
+            var loopDuration = 2200; // 2.2 seconds per loop cycle
+            var t = ((now - this.startTime) % loopDuration) / 1000; // 0.0 to 2.2s
+
+            var presetName = this.activePreset || "";
+
+            // Calculate animated parameters based on active preset
+            var textX = 14;
+            var textY = h / 2 + 3;
+            var textAlpha = 1;
+            var displayText = sampleText;
+
+            if (presetName.indexOf("Bounce") !== -1 || presetName.indexOf("Elastic") !== -1 || presetName.indexOf("Overshoot") !== -1 || presetName.indexOf("Pop") !== -1 || presetName.indexOf("Snap") !== -1) {
+                // Overshoot Elastic Bounce Scale & Offset
+                var bounceProgress = Math.min(t / 1.2, 1);
+                var overshoot = 1 + Math.sin(bounceProgress * 10) * Math.exp(-bounceProgress * 4.5);
+                textY = h / 2 + (1 - overshoot) * 20;
+
+            } else if (presetName.indexOf("Typewriter") !== -1 || presetName.indexOf("Terminal") !== -1 || presetName.indexOf("Cursor") !== -1) {
+                // Typewriter Reveal
+                var charCount = Math.floor(t * 22);
+                var cursorChar = (Math.floor(t * 5) % 2 === 0) ? "|" : "";
+                if (charCount < sampleText.length) {
+                    displayText = sampleText.substring(0, charCount) + "|";
+                } else {
+                    displayText = sampleText + cursorChar;
+                }
+
+            } else if (presetName.indexOf("Glitch") !== -1 || presetName.indexOf("Digital") !== -1 || presetName.indexOf("Matrix") !== -1 || presetName.indexOf("Decryptor") !== -1 || presetName.indexOf("Code") !== -1) {
+                // Matrix Code Decryptor
+                var codeChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*";
+                var progress = Math.floor(t * 18);
+                var outStr = "";
+                for (var c = 0; c < sampleText.length; c++) {
+                    if (c < progress) {
+                        outStr += sampleText.charAt(c);
+                    } else {
+                        outStr += codeChars.charAt(Math.floor((t * 100 + c * 7) % codeChars.length));
+                    }
+                }
+                displayText = outStr;
+
+            } else if (presetName.indexOf("Wave") !== -1 || presetName.indexOf("Ripple") !== -1 || presetName.indexOf("Sinusoidal") !== -1 || presetName.indexOf("Fluid") !== -1) {
+                // Sinusoidal Wave Offset
+                var waveY = Math.sin(t * 8) * 6;
+                textY = h / 2 + waveY;
+
+            } else if (presetName.indexOf("Wiggle") !== -1 || presetName.indexOf("Jitter") !== -1 || presetName.indexOf("Noise") !== -1) {
+                // Decaying Wiggle Shake
+                var wiggleOffset = (Math.random() - 0.5) * 12 * Math.exp(-t * 2.5);
+                textX = 14 + wiggleOffset;
+                textY = h / 2 + (Math.random() - 0.5) * 8 * Math.exp(-t * 2.5);
+
+            } else {
+                // Universal Rise & Settle
+                var rise = Math.min(t / 0.8, 1);
+                var easeRise = Math.sin(rise * Math.PI / 2);
+                textY = h / 2 + (1 - easeRise) * 35;
+            }
+
+            // Draw Sample Text
+            try {
+                var textPen = g.newPen(g.PenType.SOLID_COLOR, [0.0, 0.9, 1.0, textAlpha], 1); // FramEmpire Cyan
+                var textFont = ScriptUI.newFont("sans-serif", "BOLD", 10);
+                g.drawString(displayText, textPen, textX, textY, textFont);
+            } catch (eDraw) {}
+        };
+
+        // Tuning & Apply Box
+        var tuneBox = rightGroup.add("group");
+        tuneBox.orientation = "row";
+        tuneBox.alignChildren = ["left", "center"];
+        tuneBox.spacing = 4;
+
+        tuneBox.add("statictext", undefined, "Freq:");
+        var txtFreq = tuneBox.add("edittext", undefined, "3");
+        txtFreq.preferredSize.width = 28;
+
+        tuneBox.add("statictext", undefined, "Decay:");
+        var txtDecay = tuneBox.add("edittext", undefined, "5");
+        txtDecay.preferredSize.width = 28;
+
+        var btnApplyPreset = rightGroup.add("button", undefined, "APPLY PRESET TO LAYER");
+        btnApplyPreset.preferredSize.height = 28;
+        btnApplyPreset.helpTip = "Applies selected text preset to selected After Effects text layers.";
+
+        // Event Handlers for Category & Preset List Selection
         ddlCategory.onChange = function () {
             var catName = PRESET_CATEGORIES[ddlCategory.selection.index];
             var newItems = PRESETS_BY_CATEGORY[catName] || [];
-            ddlPresets.removeAll();
+            lstPresets.removeAll();
             for (var k = 0; k < newItems.length; k++) {
-                ddlPresets.add("item", newItems[k]);
+                lstPresets.add("item", newItems[k]);
             }
-            ddlPresets.selection = 0;
+            lstPresets.selection = 0;
+            if (newItems.length > 0) {
+                previewCanvas.activePreset = newItems[0];
+                previewCanvas.startTime = new Date().getTime();
+                previewCanvas.notify("onDraw");
+            }
         };
 
-        // Tuning Row
-        var tuneRow = tabPresets.add("group");
-        tuneRow.orientation = "row";
-        tuneRow.alignChildren = ["left", "center"];
-        tuneRow.spacing = 6;
+        lstPresets.onChange = function () {
+            if (lstPresets.selection) {
+                previewCanvas.activePreset = lstPresets.selection.text;
+                previewCanvas.startTime = new Date().getTime();
+                previewCanvas.notify("onDraw");
+            }
+        };
 
-        tuneRow.add("statictext", undefined, "Freq:");
-        var txtFreq = tuneRow.add("edittext", undefined, "3");
-        txtFreq.preferredSize.width = 30;
-
-        tuneRow.add("statictext", undefined, "Decay:");
-        var txtDecay = tuneRow.add("edittext", undefined, "5");
-        txtDecay.preferredSize.width = 30;
-
-        var btnApplyPreset = tabPresets.add("button", undefined, "Apply Selected Text Preset");
-        btnApplyPreset.helpTip = "Applies selected text preset expression and animation to text layers.";
 
         // TAB 2: ⚡ SPECIAL FX
         var tabFX = tabbedPanel.add("tab", undefined, "⚡ Special FX");
@@ -697,9 +807,10 @@
         tabFX.spacing = 8;
         tabFX.margins = 10;
 
-        var btnTypewriter = tabFX.add("button", undefined, "Typewriter with Cursor");
+        var btnTypewriter = tabFX.add("button", undefined, "Typewriter with Blinking Cursor");
         var btnMatrix = tabFX.add("button", undefined, "Digital Code Decryptor");
         var btnWiggle = tabFX.add("button", undefined, "Decaying Text Wiggle");
+
 
         // TAB 3: 🎯 ANCHOR & ALIGNMENT
         var tabAnchor = tabbedPanel.add("tab", undefined, "🎯 Character Anchor");
@@ -735,6 +846,7 @@
         var btnBase = r3.add("button", [0,0,50,24], "─ Base");
         var btnBR = r3.add("button", [0,0,50,24], "◢ BR");
 
+
         // TAB 4: 🛠 UTILITIES & SPLIT
         var tabUtils = tabbedPanel.add("tab", undefined, "🛠 Split & Tools");
         tabUtils.orientation = "column";
@@ -758,6 +870,7 @@
 
         var btnTextToShape = tabUtils.add("button", undefined, "Convert Text to Shape Layers");
 
+
         // --- STATUS FOOTER ---
         var statusGroup = win.add("group");
         statusGroup.orientation = "column";
@@ -779,25 +892,23 @@
         var brandBtn = brandGroup.add("button", undefined, "Powered by FramEmpire  |  www.framempire.com");
         brandBtn.helpTip = "Click to visit www.framempire.com";
 
-        // EVENT LISTENERS - TAB 1 PRESETS
+
+        // --- EVENT LISTENERS ---
+
         btnApplyPreset.onClick = function () {
-            if (ddlPresets.selection) {
-                applyTextPresetToLayers(ddlPresets.selection.text, txtFreq.text, txtDecay.text, statusText);
+            if (lstPresets.selection) {
+                applyTextPresetToLayers(lstPresets.selection.text, txtFreq.text, txtDecay.text, statusText);
             }
         };
 
-        // EVENT LISTENERS - TAB 2 SPECIAL FX
         btnTypewriter.onClick = function () { applyTypewriterWithCursor(statusText); };
         btnMatrix.onClick = function () {
-            if (ddlPresets.items.length > 0) {
-                applyTextPresetToLayers("21. Binary Code Matrix Reveal", txtFreq.text, txtDecay.text, statusText);
-            }
+            applyTextPresetToLayers("21. Binary Code Matrix Reveal", txtFreq.text, txtDecay.text, statusText);
         };
         btnWiggle.onClick = function () {
             applyTextPresetToLayers("12. Decaying Wiggle", txtFreq.text, txtDecay.text, statusText);
         };
 
-        // EVENT LISTENERS - TAB 3 CHARACTER ANCHOR
         btnTL.onClick = function () { setCharacterAnchorPoint("left", "top", statusText); };
         btnTC.onClick = function () { setCharacterAnchorPoint("center", "top", statusText); };
         btnTR.onClick = function () { setCharacterAnchorPoint("right", "top", statusText); };
@@ -808,7 +919,6 @@
         btnBase.onClick = function () { setCharacterAnchorPoint("center", "baseline", statusText); };
         btnBR.onClick = function () { setCharacterAnchorPoint("right", "bottom", statusText); };
 
-        // EVENT LISTENERS - TAB 4 UTILITIES & SPLIT
         btnSplitChar.onClick = function () { splitTextLayer("char", statusText); };
         btnSplitWord.onClick = function () { splitTextLayer("word", statusText); };
         btnSplitLine.onClick = function () { splitTextLayer("line", statusText); };
@@ -821,6 +931,13 @@
 
         brandBtn.onClick = function () {
             openWebPage("https://www.framempire.com");
+        };
+
+        // Continuous Loop Animation Refresher using win.onIdle
+        win.onIdle = function () {
+            if (previewCanvas && previewCanvas.visible) {
+                previewCanvas.notify("onDraw");
+            }
         };
 
         win.onResize = function () {
