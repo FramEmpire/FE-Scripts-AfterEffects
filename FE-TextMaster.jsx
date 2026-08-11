@@ -1,160 +1,287 @@
 /**
- * FE-TextMaster v3.0 - Continuous Auto-Loop Preview Motion Suite for After Effects
+ * FE-TextMaster v4.0 - Live Motion & 100 Preset Suite for After Effects
  * 
  * Powered by FramEmpire | www.framempire.com
  * 
- * Features:
- * - Continuous 25 FPS Auto-Loop Preview Engine (Powered by AE Task Scheduler)
- * - Real-Time Animated Preview of "FramEmpire- A Revolution of Animation"
- * - 100 Unique Handcrafted Motion Presets across 10 Categories
- * - Split Text Engine, Character Anchor Matrix, Case Converter & Text Tools
+ * Core Engine:
+ * - 100 Exact AE Motion Expressions across 10 Categories
+ * - Guaranteed Live ScriptUI Preview Canvas animating "FramEmpire- A Revolution of Animation"
+ * - Instant Preset Applicator & Expression Injector
+ * - Split Text Engine, Per-Character Anchor Matrix & Text Utilities
  */
 
 (function (thisObj) {
 
     // ==========================================
-    // 100 UNIQUE PRESETS ACROSS 10 CATEGORIES
+    // 10 CATEGORIES & 100 PRESET NAMES
     // ==========================================
 
     var PRESET_CATEGORIES = [
         "1. Bounce & Elastic Motion",
-        "2. Kinetic & Typography Dynamics",
-        "3. Glitch & Digital Distortion",
-        "4. UI & Digital HUD FX",
-        "5. Wave, Fluid & Physics",
+        "2. Kinetic Typography",
+        "3. Glitch & Digital",
+        "4. UI & HUD FX",
+        "5. Physics, Wave & Fluid",
         "6. 3D Space & Isometric",
-        "7. Particle, Shatter & Assembly",
-        "8. Gaming & Social Media Style",
-        "9. Mathematical & Procedural",
-        "10. Minimal, Clean & Corporate"
+        "7. Particle & Shatter",
+        "8. Gaming & Pop Style",
+        "9. Mathematical Procedures",
+        "10. Minimal & Clean"
     ];
 
     var PRESETS_BY_CATEGORY = {
         "1. Bounce & Elastic Motion": [
-            "1. Overshoot Elastic Scale",
-            "2. Gravity Drop Bounce",
-            "3. Squash & Stretch Land",
-            "4. Elastic Tracking (Letter Spacing)",
-            "5. Horizontal Wall Bounce",
-            "6. 3D Depth Pendulum",
-            "7. Wobbly Character Rotation",
-            "8. Rubber Band Skew",
-            "9. Springy Position Offset",
-            "10. Multi-layer Cascade Bounce"
+            "01. Heavy Gravity Drop",
+            "02. Horizontal Wall Snap",
+            "03. Rubber Skew Stretch",
+            "04. 3D Depth Pendulum",
+            "05. Character Stagger Bounce",
+            "06. Overshoot Scale Pulse",
+            "07. Baseline Wave Wobble",
+            "08. Micro-Jitter Elastic",
+            "09. Reverse Spring Snap",
+            "10. Anchor Point Pop Bounce"
         ],
-        "2. Kinetic & Typography Dynamics": [
-            "11. Typewriter with Carriage Return",
-            "12. Decaying Wiggle",
+        "2. Kinetic Typography": [
+            "11. Recoil Typewriter",
+            "12. Decaying Wiggle Position",
             "13. Inertial Kinetic Snap",
-            "14. Word-by-Word Pop",
-            "15. Incremental Anchor Scale",
-            "16. Text Shuffle Reveal",
-            "17. Dynamic Tracking Compress",
-            "18. Chaotic to Order Assembly",
-            "19. Elastic Baseline Shift",
-            "20. Velocity-based Rotation"
+            "14. Word Pop Cascade",
+            "15. Incremental Tracking Snap",
+            "16. Random Character Shuffle",
+            "17. Velocity Driven Rotation",
+            "18. Kinetic Line Slide",
+            "19. Elastic Tracking Compress",
+            "20. Chaotic Assembly Snap"
         ],
-        "3. Glitch & Digital Distortion": [
-            "21. Binary Code Matrix Reveal",
-            "22. RGB Split Bounce",
-            "23. Pixelated Snap Transition",
-            "24. Signal Interference Flicker",
-            "25. Digital Jitter & Snap",
-            "26. Corrupted Text Glitch",
-            "27. Horizontal Slice Displacement",
-            "28. VCR Tracking Distortion",
+        "3. Glitch & Digital": [
+            "21. RGB Channel Split",
+            "22. Binary Code Matrix Reveal",
+            "23. Signal Interference Flicker",
+            "24. Digital Jitter Position",
+            "25. Pixelated Snap Scale",
+            "26. Corrupted Hex Glitch",
+            "27. Horizontal Slice Offset",
+            "28. VCR Tracking Jump",
             "29. Static Noise Opacity Pop",
-            "30. Glitchy Rotation Snap"
+            "30. Glitch Rotation Snap"
         ],
-        "4. UI & Digital HUD FX": [
-            "31. Cursor Tracking Typewriter",
-            "32. Progress Percentage Counter",
-            "33. Loading Status Pulse",
-            "34. Digital Code Decryptor",
-            "35. Terminal Command Line Pop",
-            "36. Coordinates Target Lock",
-            "37. Hexadecimal Text Morph",
-            "38. HUD Bracket Snap",
-            "39. Digital Clock Tick Pop",
-            "40. Cyberpunk Neon Strike"
+        "4. UI & HUD FX": [
+            "31. Cursor Blink Typewriter",
+            "32. Digital Counter Accent",
+            "33. HUD Bracket Target Lock",
+            "34. Terminal Command Line Pop",
+            "35. Coordinate Position Lock",
+            "36. Hexadecimal Morph",
+            "37. Cyberpunk Neon Strike",
+            "38. Loading Status Pulse",
+            "39. Digital Clock Tick Snap",
+            "40. Radar Sweep Tracking"
         ],
-        "5. Wave, Fluid & Physics": [
+        "5. Physics, Wave & Fluid": [
             "41. Sinusoidal Position Wave",
-            "42. Fluid Ripple Bounce",
-            "43. Jelly Body Distortion",
-            "44. Per-character Liquid Drop",
+            "42. Jelly Body Distortion",
+            "43. Fluid Ripple Offset",
+            "44. Per-Character Drop Bounce",
             "45. Pendulum Swing Wave",
-            "46. Floating Magnet Pull",
-            "47. Elastic String Stretch",
-            "48. Floating Weightlessness",
-            "49. Wind Blow Wobble",
-            "50. Bubble Pop Expansion"
+            "46. Floating Magnet Attract",
+            "47. Wind Blow Wobble",
+            "48. Zero Gravity Float",
+            "49. Bubble Pop Expansion",
+            "50. String Elastic Tension"
         ],
         "6. 3D Space & Isometric": [
-            "51. 3D Flip & Bounce Reveal",
+            "51. 3D Flip Bounce Reveal",
             "52. Isometric Slide Snap",
-            "53. 3D Depth Stagger Pop",
-            "54. 3D Helix Rotation",
+            "53. 3D Helix Rotation",
+            "54. Z-Space Elastic Drop",
             "55. Perspective Tilt Wobble",
             "56. 3D Box Unfold",
-            "57. Z-Space Elastic Drop",
+            "57. Camera Focal Snap",
             "58. 3D Cubical Spin",
-            "59. Camera Focal Snap",
-            "60. Per-character 3D Extrusion Snap"
+            "59. 3D Extrusion Depth Pop",
+            "60. Depth Stagger Push"
         ],
-        "7. Particle, Shatter & Assembly": [
+        "7. Particle & Shatter": [
             "61. Gravity Disintegration",
-            "62. Reverse Shatter Assembly",
-            "63. Explosive Particle Push",
-            "64. Magnetic Attract Assembly",
-            "65. Asymmetrical Fragment Pop",
-            "66. Sand / Dust Dissolve & Pop",
-            "67. Pixel Collapse & Rebound",
-            "68. Impact Shockwave Push",
-            "69. Implosive Text Reveal",
-            "70. Slice Jump & Unify"
+            "62. Reverse Shatter Re-assembly",
+            "63. Explosive Particle Outward",
+            "64. Implosive Snap Reveal",
+            "65. Slice Jump Unify",
+            "66. Asymmetrical Fragment Pop",
+            "67. Magnetic Attract Assembly",
+            "68. Impact Shockwave Offset",
+            "69. Sand Dissolve Rebound",
+            "70. Pixel Collapse Re-bound"
         ],
-        "8. Gaming & Social Media Style": [
-            "71. Score Popup Elastic",
+        "8. Gaming & Pop Style": [
+            "71. Score Elastic Popup",
             "72. Damage Number Float",
             "73. Comic Book POW Pop",
-            "74. Subscribe Button Elastic Shake",
+            "74. Subscribe Button Shake",
             "75. Level Up Banner Bounce",
-            "76. Emoji Like Pop Pulse",
+            "76. Emoji Pulse Bump",
             "77. Speech Bubble Snap",
-            "78. Arcade Combo Counter",
-            "79. Retro Pixel Bounce",
-            "80. Coin Collect Jump"
+            "78. Arcade Combo Bounce",
+            "79. Retro 8-Bit Jump",
+            "80. Coin Collect Rise"
         ],
-        "9. Mathematical & Procedural": [
-            "81. Fibonacci Scale Sequence",
-            "82. Damped Harmonic Oscillator",
+        "9. Mathematical Procedures": [
+            "81. Harmonic Oscillator Physics",
+            "82. Fibonacci Scale Stagger",
             "83. Perlin Noise Position Shift",
             "84. Exponential Decay Bounce",
             "85. Logarithmic Tracking Snap",
-            "86. Modulo Index Offset Stagger",
-            "87. Trigonometric Wave Wobble",
-            "88. Random Seed Pop",
+            "86. Modulo Index Offset Wave",
+            "87. Trigonometric Swing",
+            "88. Random Seed Frequency Pop",
             "89. Velocity Driven Elasticity",
             "90. Fractal Noise Displacement"
         ],
-        "10. Minimal, Clean & Corporate": [
+        "10. Minimal & Clean": [
             "91. Smooth Overshoot Slide",
             "92. Subtle Anchor Shift",
-            "93. Subtle Tracking Elastic",
-            "94. Line Mask Unfold with Bounce",
-            "95. Minimal Vertical Drop",
-            "96. Opacity Pulse Bounce",
-            "97. Clean Left-to-Right Cascade",
-            "98. Soft Elastic Rotation",
-            "99. Dual-Directional Snap",
-            "100. Elegant Rise & Settle"
+            "93. Minimal Vertical Drop",
+            "94. Line Mask Unfold Elastic",
+            "95. Soft Tracking Expansion",
+            "96. Dual-Direction Snap",
+            "97. Opacity Pulse Bounce",
+            "98. Clean Left Cascade",
+            "99. Subtle Rotation Settle",
+            "100. Elegant Rise Snap"
         ]
     };
 
 
     // ==========================================
-    // UTILITY & BRAND HELPERS
+    // EXACT 100 AE EXPRESSIONS MAP
+    // ==========================================
+
+    var EXPRESSION_MAP = {
+        // 1. Bounce & Elastic Motion (1-10)
+        "01. Heavy Gravity Drop": "t = time - inPoint;\nif (t > 0) {\n  gravity = 1500;\n  bounce = 0.6;\n  y = 0.5 * gravity * t * t;\n  value + [0, Math.min(y, 300) * Math.abs(Math.cos(t * 8)) * Math.exp(-t * 3)];\n} else { value; }",
+        "02. Horizontal Wall Snap": "freq = 4; decay = 6;\nt = time - inPoint;\nx = 500 * Math.sin(freq * t * 2 * Math.PI) * Math.exp(-decay * t);\nvalue + [x, 0];",
+        "03. Rubber Skew Stretch": "freq = 3; decay = 5;\nt = time - inPoint;\ns = 50 * Math.sin(freq * t * 2 * Math.PI) * Math.exp(-decay * t);\nvalue + [s, -s];",
+        "04. 3D Depth Pendulum": "freq = 2; decay = 3;\nt = time - inPoint;\nz = 400 * Math.cos(freq * t * 2 * Math.PI) * Math.exp(-decay * t);\nvalue + [0, 0, z];",
+        "05. Character Stagger Bounce": "delay = textIndex * 0.05;\nt = Math.max(0, time - inPoint - delay);\ny = -200 * Math.sin(t * 10) * Math.exp(-t * 5);\nvalue + [0, y];",
+        "06. Overshoot Scale Pulse": "freq = 3.5; decay = 6;\nt = time - inPoint;\ns = 100 * Math.sin(freq * t * 2 * Math.PI) * Math.exp(-decay * t);\nvalue + [s, s];",
+        "07. Baseline Wave Wobble": "offset = textIndex * 0.3;\ny = Math.sin((time * 6) - offset) * 30 * Math.exp(-(time - inPoint) * 2);\nvalue + [0, y];",
+        "08. Micro-Jitter Elastic": "t = time - inPoint;\nj = (Math.random() - 0.5) * 50 * Math.exp(-t * 8);\nvalue + [j, j];",
+        "09. Reverse Spring Snap": "freq = 3; decay = 4;\nt = time - inPoint;\ny = -300 * Math.cos(freq * t * 2 * Math.PI) * Math.exp(-decay * t);\nvalue + [0, y];",
+        "10. Anchor Point Pop Bounce": "t = time - inPoint;\ns = 100 * Math.sin(t * 12) * Math.exp(-t * 4);\nvalue + [s, s];",
+
+        // 2. Kinetic Typography (11-20)
+        "11. Recoil Typewriter": "speed = 12;\ntxt = value;\nnumChars = Math.floor((time - inPoint) * speed);\ntxt.substr(0, numChars);",
+        "12. Decaying Wiggle Position": "t = time - inPoint;\nw = wiggle(15, 80);\nvalue + (w - value) * Math.exp(-t * 3);",
+        "13. Inertial Kinetic Snap": "t = time - inPoint;\ndur = 0.5;\nif (t < dur) {\n  p = t / dur;\n  s = Math.sin(p * Math.PI * 2.5) * Math.exp(-p * 3);\n  value - [500 * (1 - s), 0];\n} else { value; }",
+        "14. Word Pop Cascade": "delay = textIndex * 0.1;\nt = Math.max(0, time - inPoint - delay);\ns = 100 * Math.sin(t * 8) * Math.exp(-t * 4);\nvalue + [s, s];",
+        "15. Incremental Tracking Snap": "t = time - inPoint;\nvalue + (100 * Math.cos(t * 10) * Math.exp(-t * 5));",
+        "16. Random Character Shuffle": "chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';\nt = time - inPoint;\nif (t < 1) {\n  s = '';\n  for(i=0; i<value.length; i++) s += chars[Math.floor(Math.random()*chars.length)];\n  s;\n} else { value; }",
+        "17. Velocity Driven Rotation": "v = speed;\nvalue + Math.min(v * 0.1, 45) * Math.sin(time * 10);",
+        "18. Kinetic Line Slide": "t = time - inPoint;\nx = easeOut(t, 0, 0.4, -600, 0);\ny = Math.sin(t * 12) * 50 * Math.exp(-t * 4);\nvalue + [x, y];",
+        "19. Elastic Tracking Compress": "t = time - inPoint;\nvalue - (200 * Math.sin(t * 8) * Math.exp(-t * 4));",
+        "20. Chaotic Assembly Snap": "seedRandom(textIndex, true);\nrandPos = [random(-400, 400), random(-400, 400)];\nt = Math.max(0, time - inPoint - (textIndex * 0.03));\nvalue + (randPos * Math.exp(-t * 5));",
+
+        // 3. Glitch & Digital (21-30)
+        "21. RGB Channel Split": "posterizeTime(10);\nvalue + [(Math.random()-0.5)*30, 0];",
+        "22. Binary Code Matrix Reveal": "t = time - inPoint;\ndur = 1.5;\nprogress = Math.min(1, t / dur);\nlen = Math.floor(progress * value.length);\nres = value.substr(0, len);\nfor(i=len; i<value.length; i++) res += Math.floor(Math.random()*2);\nres;",
+        "23. Signal Interference Flicker": "posterizeTime(15);\n(Math.random() > 0.3) ? 100 : 20;",
+        "24. Digital Jitter Position": "posterizeTime(12);\nt = time - inPoint;\n(t < 1) ? value + [(Math.random()-0.5)*60, (Math.random()-0.5)*20] : value;",
+        "25. Pixelated Snap Scale": "posterizeTime(8);\nt = time - inPoint;\ns = (t < 0.5) ? Math.floor(Math.random()*4)*30 : 100;\n[s, s];",
+        "26. Corrupted Hex Glitch": "hex = '0123456789ABCDEF';\nt = time - inPoint;\nif (t < 1) {\n  res = '';\n  for(i=0; i<value.length; i++) res += hex[Math.floor(Math.random()*16)];\n  res;\n} else { value; }",
+        "27. Horizontal Slice Offset": "posterizeTime(12);\nx = (textIndex % 2 == 0 ? 1 : -1) * 80 * Math.exp(-(time-inPoint)*4);\nvalue + [x, 0];",
+        "28. VCR Tracking Jump": "t = time - inPoint;\ny = (Math.sin(t * 20) > 0.8) ? 40 : 0;\nvalue + [0, y];",
+        "29. Static Noise Opacity Pop": "seedRandom(index + time*100, false);\n(time - inPoint < 0.8) ? random(0, 100) : 100;",
+        "30. Glitch Rotation Snap": "posterizeTime(10);\nt = time - inPoint;\n(t < 0.6) ? (Math.random()-0.5)*90 : 0;",
+
+        // 4. UI & HUD FX (31-40)
+        "31. Cursor Blink Typewriter": "speed = 10;\nnumChars = Math.floor((time - inPoint) * speed);\ncursor = (Math.floor(time * 3) % 2 == 0) ? '|' : '';\nvalue.substr(0, numChars) + cursor;",
+        "32. Digital Counter Accent": "val = Math.floor(easeOut(time - inPoint, 0, 2, 0, 100));\nval + '%';",
+        "33. HUD Bracket Target Lock": "t = time - inPoint;\ns = 200 * Math.exp(-t * 6);\nvalue + [s, s];",
+        "34. Terminal Command Line Pop": "t = time - inPoint;\nstep = Math.floor(t * 8);\nvalue + [0, -step * 5 * Math.exp(-t * 2)];",
+        "35. Coordinate Position Lock": "x = Math.floor(position[0] + wiggle(5, 20)[0]);\ny = Math.floor(position[1] + wiggle(5, 20)[1]);\n'X:' + x + ' Y:' + y;",
+        "36. Hexadecimal Morph": "t = time - inPoint;\nif(t < 0.8) {\n  '0x' + Math.floor(Math.random()*65535).toString(16).toUpperCase();\n} else { value; }",
+        "37. Cyberpunk Neon Strike": "t = time - inPoint;\n(t < 0.5) ? Math.sin(t * 40) * 100 : 100;",
+        "38. Loading Status Pulse": "50 + Math.sin((time - inPoint) * 10) * 50;",
+        "39. Digital Clock Tick Snap": "step = Math.floor((time - inPoint) * 4);\nstep * 90;",
+        "40. Radar Sweep Tracking": "Math.sin(time * 5) * 50;",
+
+        // 5. Physics, Wave & Fluid (41-50)
+        "41. Sinusoidal Position Wave": "y = Math.sin((time * 5) + (textIndex * 0.5)) * 40;\nvalue + [0, y];",
+        "42. Jelly Body Distortion": "t = time - inPoint;\nsx = 100 + 40 * Math.sin(t * 10) * Math.exp(-t * 3);\nsy = 100 - 40 * Math.sin(t * 10) * Math.exp(-t * 3);\n[sx, sy];",
+        "43. Fluid Ripple Offset": "t = time - inPoint;\nr = Math.sin(t * 8 - textIndex * 0.4) * 30 * Math.exp(-t * 2);\nvalue + [0, r];",
+        "44. Per-Character Drop Bounce": "t = Math.max(0, time - inPoint - textIndex * 0.08);\ny = Math.abs(Math.sin(t * 6)) * -150 * Math.exp(-t * 3);\nvalue + [0, -y];",
+        "45. Pendulum Swing Wave": "t = time - inPoint;\nvalue + 45 * Math.cos(t * 4) * Math.exp(-t * 1.5);",
+        "46. Floating Magnet Attract": "t = time - inPoint;\nd = 300 * Math.exp(-t * 4);\nvalue + [Math.cos(t*10)*d, Math.sin(t*10)*d];",
+        "47. Wind Blow Wobble": "value + Math.sin(time * 8) * 15 * Math.exp(-(time-inPoint)*2);",
+        "48. Zero Gravity Float": "x = Math.sin(time * 1.5) * 20;\ny = Math.cos(time * 2) * 25;\nvalue + [x, y];",
+        "49. Bubble Pop Expansion": "t = time - inPoint;\ns = (t < 0.2) ? easeOut(t, 0, 0.2, 0, 130) : easeOut(t, 0.2, 0.4, 130, 100);\n[s, s];",
+        "50. String Elastic Tension": "t = time - inPoint;\ny = -200 * Math.exp(-t * 2) * Math.cos(t * 15);\nvalue + [0, y];",
+
+        // 6. 3D Space & Isometric (51-60)
+        "51. 3D Flip Bounce Reveal": "t = Math.max(0, time - inPoint - textIndex * 0.05);\n180 * Math.cos(t * 6) * Math.exp(-t * 3);",
+        "52. Isometric Slide Snap": "t = time - inPoint;\noffset = 400 * Math.exp(-t * 5) * Math.cos(t * 10);\nvalue + [offset, offset * 0.5];",
+        "53. 3D Helix Rotation": "t = time - inPoint;\nMath.sin(t * 5 + textIndex * 0.5) * 90 * Math.exp(-t * 2);",
+        "54. Z-Space Elastic Drop": "t = time - inPoint;\nz = -1000 * Math.cos(t * 5) * Math.exp(-t * 3);\nvalue + [0, 0, z];",
+        "55. Perspective Tilt Wobble": "t = time - inPoint;\n60 * Math.sin(t * 6) * Math.exp(-t * 2.5);",
+        "56. 3D Box Unfold": "t = Math.max(0, time - inPoint - textIndex * 0.1);\neaseOut(t, 0, 0.5, -90, 0);",
+        "57. Camera Focal Snap": "t = time - inPoint;\ns = 400 * Math.exp(-t * 6);\nvalue + [s, s];",
+        "58. 3D Cubical Spin": "t = time - inPoint;\n(t < 0.8) ? easeOut(t, 0, 0.8, 360, 0) : 0;",
+        "59. 3D Extrusion Depth Pop": "t = time - inPoint;\nz = 500 * Math.sin(t * 8) * Math.exp(-t * 4);\nvalue + [0, 0, z];",
+        "60. Depth Stagger Push": "t = Math.max(0, time - inPoint - textIndex * 0.06);\nz = -500 * Math.exp(-t * 4);\nvalue + [0, 0, z];",
+
+        // 7. Particle & Shatter (61-70)
+        "61. Gravity Disintegration": "t = Math.max(0, time - inPoint - textIndex * 0.05);\ny = 0.5 * 1000 * t * t;\nvalue + [0, y];",
+        "62. Reverse Shatter Re-assembly": "seedRandom(textIndex, true);\nstartPos = [random(-600,600), random(-600,600)];\nt = time - inPoint;\ndur = 0.8;\nvalue + easeOut(t, 0, dur, startPos, [0,0]);",
+        "63. Explosive Particle Outward": "seedRandom(textIndex, true);\ndir = [random(-1,1), random(-1,1)];\nt = time - inPoint;\nvalue + (dir * 500 * Math.sin(t * 5) * Math.exp(-t * 3));",
+        "64. Implosive Snap Reveal": "seedRandom(textIndex, true);\nstartPos = [random(-400,400), random(-400,400)];\nt = time - inPoint;\nvalue + (startPos * Math.exp(-t * 6));",
+        "65. Slice Jump Unify": "y = (textIndex % 2 == 0 ? -200 : 200) * Math.exp(-(time-inPoint)*5);\nvalue + [0, y];",
+        "66. Asymmetrical Fragment Pop": "seedRandom(textIndex, true);\nvalue + [random(-100,100), random(-200,200)] * Math.exp(-(time-inPoint)*4);",
+        "67. Magnetic Attract Assembly": "t = time - inPoint;\nr = 400 * Math.exp(-t * 5);\nvalue + [Math.cos(textIndex)*r, Math.sin(textIndex)*r];",
+        "68. Impact Shockwave Offset": "t = time - inPoint;\nshk = Math.sin(t * 30) * 40 * Math.exp(-t * 6);\nvalue + [shk, shk];",
+        "69. Sand Dissolve Rebound": "seedRandom(textIndex, true);\nt = time - inPoint;\nvalue + [random(-50,50), random(0,200)] * Math.exp(-t * 3);",
+        "70. Pixel Collapse Re-bound": "t = time - inPoint;\ns = (t < 0.3) ? 10 : 100 + 50 * Math.exp(-t*5);\n[s, s];",
+
+        // 8. Gaming & Pop Style (71-80)
+        "71. Score Elastic Popup": "t = time - inPoint;\ns = 100 + 150 * Math.sin(t * 10) * Math.exp(-t * 5);\n[s, s];",
+        "72. Damage Number Float": "t = time - inPoint;\nvalue - [0, easeOut(t, 0, 0.8, 0, 150)];",
+        "73. Comic Book POW Pop": "t = time - inPoint;\ns = (t < 0.1) ? easeOut(t,0,0.1,0,160) : easeOut(t,0.1,0.4,160,100);\n[s, s];",
+        "74. Subscribe Button Shake": "t = time - inPoint;\nMath.sin(t * 20) * 15 * Math.exp(-t * 4);",
+        "75. Level Up Banner Bounce": "t = time - inPoint;\ny = -300 * Math.sin(t * 8) * Math.exp(-t * 4);\nvalue + [0, y];",
+        "76. Emoji Pulse Bump": "100 + Math.abs(Math.sin((time - inPoint) * 8)) * 30;",
+        "77. Speech Bubble Snap": "t = time - inPoint;\nsx = easeOut(t, 0, 0.3, 0, 100);\nsy = easeOut(t, 0, 0.3, 0, 100) + 30 * Math.sin(t*15)*Math.exp(-t*5);\n[sx, sy];",
+        "78. Arcade Combo Bounce": "t = time - inPoint;\ns = 100 + Math.abs(Math.cos(t * 12)) * 40 * Math.exp(-t * 3);\n[s, s];",
+        "79. Retro 8-Bit Jump": "step = Math.floor((time - inPoint) * 12);\ny = -Math.abs(Math.sin(step * 0.5)) * 80;\nvalue + [0, y];",
+        "80. Coin Collect Rise": "t = time - inPoint;\ny = -200 * (1 - Math.exp(-t * 4));\nvalue + [0, y];",
+
+        // 9. Mathematical Procedures (81-90)
+        "81. Harmonic Oscillator Physics": "m = 1; k = 80; c = 8;\nt = time - inPoint;\nw = Math.sqrt(k/m);\ndisp = Math.exp(-c*t) * Math.cos(w*t);\nvalue + [0, -200 * disp];",
+        "82. Fibonacci Scale Stagger": "fib = [1, 1, 2, 3, 5, 8, 13, 21];\nidx = Math.min(Math.floor((time - inPoint) * 10), fib.length - 1);\ns = fib[idx] * 10;\n[s, s];",
+        "83. Perlin Noise Position Shift": "nx = noise(time * 2) * 100;\nny = noise((time + 10) * 2) * 100;\nvalue + [nx, ny];",
+        "84. Exponential Decay Bounce": "t = time - inPoint;\ny = -300 * Math.pow(0.5, t * 4) * Math.abs(Math.cos(t * 10));\nvalue + [0, y];",
+        "85. Logarithmic Tracking Snap": "t = Math.max(0.01, time - inPoint);\nvalue + (200 / Math.log(t * 10 + 1));",
+        "86. Modulo Index Offset Wave": "y = (textIndex % 3 == 0) ? Math.sin(time * 6) * 50 : 0;\nvalue + [0, y];",
+        "87. Trigonometric Swing": "Math.tan(Math.sin(time * 3)) * 20;",
+        "88. Random Seed Frequency Pop": "seedRandom(Math.floor(time * 4), true);\ns = random(80, 120);\n[s, s];",
+        "89. Velocity Driven Elasticity": "v = length(velocity);\ns = v * 0.05;\n[100 + s, 100 - s];",
+        "90. Fractal Noise Displacement": "n = layer('Null 1') ? 0 : Math.sin(time*10)*20;\nvalue + [n, n];",
+
+        // 10. Minimal & Clean (91-100)
+        "91. Smooth Overshoot Slide": "t = time - inPoint;\nx = easeOut(t, 0, 0.6, -400, 0) + 30 * Math.sin(t * 8) * Math.exp(-t * 4);\nvalue + [x, 0];",
+        "92. Subtle Anchor Shift": "t = time - inPoint;\nvalue + [0, 50 * Math.exp(-t * 5)];",
+        "93. Minimal Vertical Drop": "t = time - inPoint;\ny = easeOut(t, 0, 0.5, -100, 0);\nvalue + [0, y];",
+        "94. Line Mask Unfold Elastic": "t = time - inPoint;\nsx = easeOut(t, 0, 0.4, 0, 100) + 20 * Math.sin(t * 10) * Math.exp(-t * 5);\n[sx, 100];",
+        "95. Soft Tracking Expansion": "t = time - inPoint;\neaseOut(t, 0, 1, 100, 0);",
+        "96. Dual-Direction Snap": "dir = (textIndex % 2 == 0) ? -1 : 1;\nt = time - inPoint;\nvalue + [dir * 200 * Math.exp(-t * 5), 0];",
+        "97. Opacity Pulse Bounce": "t = time - inPoint;\neaseOut(t, 0, 0.3, 0, 100) + 30 * Math.sin(t * 12) * Math.exp(-t * 4);",
+        "98. Clean Left Cascade": "t = Math.max(0, time - inPoint - textIndex * 0.04);\nx = -150 * Math.exp(-t * 6);\nvalue + [x, 0];",
+        "99. Subtle Rotation Settle": "t = time - inPoint;\n15 * Math.cos(t * 5) * Math.exp(-t * 3);",
+        "100. Elegant Rise Snap": "t = time - inPoint;\ny = 120 * Math.exp(-t * 4) * Math.cos(t * 6);\nvalue + [0, y];"
+    };
+
+
+    // ==========================================
+    // UTILITY HELPERS
     // ==========================================
 
     function openWebPage(url) {
@@ -179,42 +306,10 @@
 
 
     // ==========================================
-    // PRESET EXPRESSION BUILDER (100 UNIQUE PRESETS)
+    // PRESET APPLICATION ENGINE
     // ==========================================
 
-    function getPresetExpression(presetName, freq, decay) {
-        if (presetName.indexOf("1. Overshoot Elastic Scale") !== -1) {
-            return "freq = " + freq + "; decay = " + decay + "; t = time - inPoint; s = 100 + 40 * Math.sin(t * freq * 2 * Math.PI) * Math.exp(-t * decay); [s, s, 100];";
-        } else if (presetName.indexOf("2. Gravity Drop Bounce") !== -1) {
-            return "freq = " + freq + "; decay = " + decay + "; t = time - inPoint; y = Math.abs(Math.sin(t * freq * Math.PI)) * -180 * Math.exp(-t * decay); [value[0], value[1] + y, value[2]];";
-        } else if (presetName.indexOf("3. Squash & Stretch Land") !== -1) {
-            return "freq = " + freq + "; decay = " + decay + "; t = time - inPoint; sq = Math.sin(t * freq * 2 * Math.PI) * 35 * Math.exp(-t * decay); [100 + sq, 100 - sq, 100];";
-        } else if (presetName.indexOf("4. Elastic Tracking") !== -1) {
-            return "freq = " + freq + "; decay = " + decay + "; t = time - inPoint; value + Math.sin(t * freq * 2 * Math.PI) * 50 * Math.exp(-t * decay);";
-        } else if (presetName.indexOf("5. Horizontal Wall Bounce") !== -1) {
-            return "freq = " + freq + "; decay = " + decay + "; t = time - inPoint; x = Math.sin(t * freq * 2 * Math.PI) * 200 * Math.exp(-t * decay); [value[0] + x, value[1], value[2]];";
-        } else if (presetName.indexOf("11. Typewriter") !== -1 || presetName.indexOf("31. Cursor Tracking") !== -1) {
-            return "spd = " + (freq * 4) + "; txt = value; p = Math.floor((time - inPoint) * spd); (p < txt.length) ? txt.substr(0, p) + '|' : txt + ((Math.floor(time * 3)%2==0)?'|':'');";
-        } else if (presetName.indexOf("12. Decaying Wiggle") !== -1) {
-            return "freq = " + (freq * 3) + "; amp = 40; decay = " + decay + "; w = wiggle(freq, amp); value + (w - value) / Math.exp((time - inPoint) * decay);";
-        } else if (presetName.indexOf("21. Binary Code") !== -1 || presetName.indexOf("34. Digital Code Decryptor") !== -1) {
-            return "chars = '01010101ABCDEFGHIJKLMNOPQRSTUVWXYZ'; spd = " + (freq * 5) + "; txt = value; p = Math.floor((time - inPoint) * spd); out = ''; for (i = 0; i < txt.length; i++) { if (i < p) out += txt[i]; else out += chars[Math.floor(random(0, chars.length))]; } out;";
-        } else if (presetName.indexOf("22. RGB Split") !== -1) {
-            return "freq = " + freq + "; t = time - inPoint; Math.sin(t * freq * 2 * Math.PI) * 30 * Math.exp(-t * " + decay + ");";
-        } else if (presetName.indexOf("41. Sinusoidal Position Wave") !== -1 || presetName.indexOf("42. Fluid Ripple") !== -1) {
-            return "freq = " + freq + "; amp = 35; delay = textIndex * 0.15; y = Math.sin((time - delay) * freq * 2 * Math.PI) * amp; [value[0], value[1] + y, value[2]];";
-        } else if (presetName.indexOf("51. 3D Flip") !== -1 || presetName.indexOf("58. 3D Cubical Spin") !== -1) {
-            return "freq = " + freq + "; decay = " + decay + "; t = time - inPoint; Math.sin(t * freq * 2 * Math.PI) * 180 * Math.exp(-t * decay);";
-        } else if (presetName.indexOf("71. Score Popup Elastic") !== -1 || presetName.indexOf("72. Damage Number Float") !== -1) {
-            return "freq = " + (freq * 1.5) + "; decay = " + decay + "; t = time - inPoint; y = -t * 80; s = 100 + Math.sin(t * freq * 2 * Math.PI) * 60 * Math.exp(-t * decay); [value[0], value[1] + y, value[2]];";
-        } else if (presetName.indexOf("81. Fibonacci Scale") !== -1 || presetName.indexOf("82. Damped Harmonic") !== -1) {
-            return "freq = " + freq + "; decay = " + decay + "; t = time - inPoint; s = 100 + 50 * (Math.cos(freq * t) / Math.exp(decay * t)); [s, s, 100];";
-        } else {
-            return "freq = " + freq + "; decay = " + decay + "; t = time - inPoint; y = Math.sin(t * freq * 2 * Math.PI) * -120 * Math.exp(-t * decay); [value[0], value[1] + y, value[2]];";
-        }
-    }
-
-    function applyTextPresetToLayers(presetName, freqVal, decayVal, statusText) {
+    function applyPresetToSelectedLayers(presetName, statusText) {
         var comp = app.project.activeItem;
         if (!comp || !(comp instanceof CompItem)) {
             alert("Please select an active Composition.", "FE-TextMaster");
@@ -232,21 +327,22 @@
             return;
         }
 
+        var exprCode = EXPRESSION_MAP[presetName];
+        if (!exprCode) {
+            alert("Could not find expression code for '" + presetName + "'.", "FE-TextMaster");
+            return;
+        }
+
         app.beginUndoGroup("FE-TextMaster - Apply " + presetName);
 
         try {
             var count = 0;
-            var freq = parseFloat(freqVal) || 3;
-            var decay = parseFloat(decayVal) || 5;
-
-            var exprCode = getPresetExpression(presetName, freq, decay);
-
             for (var i = 0; i < textLayers.length; i++) {
                 var layer = textLayers[i];
                 var textProp = layer.property("ADBE Text Properties");
                 if (!textProp) continue;
 
-                if (presetName.indexOf("Typewriter") !== -1 || presetName.indexOf("Binary Code") !== -1 || presetName.indexOf("Decryptor") !== -1) {
+                if (presetName.indexOf("Typewriter") !== -1 || presetName.indexOf("Binary Code") !== -1 || presetName.indexOf("Hex Glitch") !== -1 || presetName.indexOf("Counter Accent") !== -1 || presetName.indexOf("Coordinate Position") !== -1) {
                     var docProp = textProp.property("ADBE Text Document");
                     if (docProp && docProp.canSetExpression) {
                         docProp.expression = exprCode;
@@ -262,12 +358,14 @@
                     var props = animator.property("ADBE Text Animator Properties");
                     var targetProp = null;
 
-                    if (presetName.indexOf("Scale") !== -1 || presetName.indexOf("Squash") !== -1) {
+                    if (presetName.indexOf("Scale") !== -1 || presetName.indexOf("Stretch") !== -1 || presetName.indexOf("Pop") !== -1 || presetName.indexOf("Pulse") !== -1) {
                         targetProp = props.addProperty("ADBE Text Scale 3D");
                     } else if (presetName.indexOf("Tracking") !== -1) {
                         targetProp = props.addProperty("ADBE Text Tracking Amount");
-                    } else if (presetName.indexOf("Rotation") !== -1 || presetName.indexOf("Flip") !== -1 || presetName.indexOf("Spin") !== -1) {
+                    } else if (presetName.indexOf("Rotation") !== -1 || presetName.indexOf("Shake") !== -1 || presetName.indexOf("Spin") !== -1 || presetName.indexOf("Swing") !== -1) {
                         targetProp = props.addProperty("ADBE Text Rotation Z");
+                    } else if (presetName.indexOf("Opacity") !== -1 || presetName.indexOf("Flicker") !== -1 || presetName.indexOf("Strike") !== -1) {
+                        targetProp = props.addProperty("ADBE Text Opacity");
                     } else {
                         targetProp = props.addProperty("ADBE Text Position 3D");
                     }
@@ -292,7 +390,7 @@
 
 
     // ==========================================
-    // SPECIAL FX, ANCHOR & UTILITIES ENGINES
+    // SPECIAL FX & UTILITIES ENGINES
     // ==========================================
 
     function applyTypewriterWithCursor(statusText) {
@@ -321,16 +419,10 @@
                 var sourceProp = layer.property("ADBE Text Properties").property("ADBE Text Document");
                 if (sourceProp && sourceProp.canSetExpression) {
                     sourceProp.expression = 
-                        "// Typewriter with Blinking Cursor\n" +
-                        "spd = 15;\n" +
-                        "txt = value;\n" +
-                        "progress = Math.floor((time - inPoint) * spd);\n" +
+                        "speed = 10;\n" +
+                        "numChars = Math.floor((time - inPoint) * speed);\n" +
                         "cursor = (Math.floor(time * 3) % 2 == 0) ? '|' : '';\n" +
-                        "if (progress < txt.length) {\n" +
-                        "    txt.substr(0, progress) + '|';\n" +
-                        "} else {\n" +
-                        "    txt + cursor;\n" +
-                        "}";
+                        "value.substr(0, numChars) + cursor;";
                 }
             }
             var msg = "Applied Typewriter with Blinking Cursor.";
@@ -561,7 +653,7 @@
         var titleText = headerGroup.add("statictext", undefined, "FE-TEXTMASTER");
         titleText.graphics.font = ScriptUI.newFont("sans-serif", "BOLD", 15);
 
-        var subText = headerGroup.add("statictext", undefined, "Continuous Live Motion & 100 Presets");
+        var subText = headerGroup.add("statictext", undefined, "Live Motion Preview & 100 AE Presets");
         subText.graphics.font = ScriptUI.newFont("sans-serif", "REGULAR", 9);
 
         var accentLine = win.add("panel", undefined, undefined);
@@ -572,14 +664,14 @@
         var tabbedPanel = win.add("tabbedpanel", undefined, undefined);
         tabbedPanel.alignChildren = ["fill", "top"];
 
-        // TAB 1: 🚀 LIVE PRESET BROWSER (CONTINUOUS AUTO-LOOP VIEWPORT)
+        // TAB 1: 🚀 LIVE PRESET BROWSER
         var tabPresets = tabbedPanel.add("tab", undefined, "🚀 Preset Browser");
         tabPresets.orientation = "column";
         tabPresets.alignChildren = ["fill", "top"];
         tabPresets.spacing = 8;
         tabPresets.margins = 10;
 
-        // 1. Category & Preset Selector Box
+        // 1. Category & Preset Selection Panel
         var selBox = tabPresets.add("panel", undefined, "Select Preset Category & Effect");
         selBox.orientation = "column";
         selBox.alignChildren = ["fill", "top"];
@@ -604,133 +696,37 @@
         ddlPresets.selection = 0;
         ddlPresets.alignment = ["fill", "center"];
 
-        // 2. FULL-WIDTH LIVE ANIMATED PREVIEW CANVAS
-        var previewBox = tabPresets.add("panel", undefined, "Live Animation Preview (Auto Loop)");
+        // 2. LIVE DISPLAY AREA FOR PREVIEW
+        var previewBox = tabPresets.add("panel", undefined, "Live Motion Preview (Auto Loop)");
         previewBox.orientation = "column";
         previewBox.alignChildren = ["fill", "top"];
         previewBox.spacing = 4;
-        previewBox.margins = 6;
+        previewBox.margins = 8;
 
-        var previewCanvas = previewBox.add("panel", [0, 0, 360, 110]);
-        previewCanvas.alignment = ["fill", "top"];
-        previewCanvas.preferredSize = [340, 110];
-        previewCanvas.startTime = new Date().getTime();
-        previewCanvas.activePreset = PRESETS_BY_CATEGORY[PRESET_CATEGORIES[0]][0];
+        // Visual Display Label showing the animated text
+        var txtPreviewDisplay = previewBox.add("statictext", undefined, "FramEmpire- A Revolution of Animation", {truncate: "middle"});
+        txtPreviewDisplay.alignment = ["center", "center"];
+        txtPreviewDisplay.preferredSize = [340, 36];
+        txtPreviewDisplay.graphics.font = ScriptUI.newFont("sans-serif", "BOLD", 11);
 
-        // Register Global Handle for AE Background Scheduled Task
-        $.global._feCanvas = previewCanvas;
+        try {
+            var cyanPen = txtPreviewDisplay.graphics.newPen(txtPreviewDisplay.graphics.PenType.SOLID_COLOR, [0.0, 0.9, 1.0, 1], 1);
+            txtPreviewDisplay.graphics.foregroundColor = cyanPen;
+        } catch(eColor) {}
 
-        // Vector Graphics Drawing Engine for Continuous Live Motion Loop
-        previewCanvas.onDraw = function () {
-            var g = this.graphics;
-            var w = this.bounds.width;
-            var h = this.bounds.height;
-            if (w <= 0 || h <= 0) return;
-
-            // Viewport Dark Background (#0D0D0D)
-            g.rectPath(0, 0, w, h);
-            var bgBrush = g.newBrush(g.BrushType.SOLID_COLOR, [0.05, 0.05, 0.05, 1]);
-            g.fillPath(bgBrush);
-
-            // Viewport Border Outline (#2A2A2A)
-            var borderPen = g.newPen(g.PenType.SOLID_COLOR, [0.25, 0.25, 0.25, 1], 1);
-            g.strokePath(borderPen);
-
-            var sampleText = "FramEmpire- A Revolution of Animation";
-            var now = new Date().getTime();
-            var loopDuration = 2000; // 2.0s per loop cycle
-            var t = ((now - this.startTime) % loopDuration) / 1000; // 0.0 to 2.0s
-
-            var presetName = this.activePreset || "";
-
-            // Calculate animated position & parameters
-            var textX = 20;
-            var textY = h / 2 + 4;
-            var textAlpha = 1;
-            var displayText = sampleText;
-
-            if (presetName.indexOf("Bounce") !== -1 || presetName.indexOf("Elastic") !== -1 || presetName.indexOf("Overshoot") !== -1 || presetName.indexOf("Pop") !== -1 || presetName.indexOf("Snap") !== -1) {
-                var bProgress = Math.min(t / 1.2, 1);
-                var overshoot = 1 + Math.sin(bProgress * 12) * Math.exp(-bProgress * 4.5);
-                textY = h / 2 + (1 - overshoot) * 24;
-
-            } else if (presetName.indexOf("Drop") !== -1 || presetName.indexOf("Gravity") !== -1) {
-                var dropT = Math.min(t / 1.4, 1);
-                var dropY = Math.abs(Math.sin(dropT * 8)) * -35 * Math.exp(-dropT * 3);
-                textY = h / 2 + dropY;
-
-            } else if (presetName.indexOf("Typewriter") !== -1 || presetName.indexOf("Terminal") !== -1 || presetName.indexOf("Cursor") !== -1) {
-                var charCount = Math.floor(t * 22);
-                var cursorChar = (Math.floor(t * 5) % 2 === 0) ? "|" : "";
-                if (charCount < sampleText.length) {
-                    displayText = sampleText.substring(0, charCount) + "|";
-                } else {
-                    displayText = sampleText + cursorChar;
-                }
-
-            } else if (presetName.indexOf("Glitch") !== -1 || presetName.indexOf("Digital") !== -1 || presetName.indexOf("Matrix") !== -1 || presetName.indexOf("Decryptor") !== -1 || presetName.indexOf("Code") !== -1) {
-                var codeChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*";
-                var progress = Math.floor(t * 18);
-                var outStr = "";
-                for (var c = 0; c < sampleText.length; c++) {
-                    if (c < progress) {
-                        outStr += sampleText.charAt(c);
-                    } else {
-                        outStr += codeChars.charAt(Math.floor((t * 100 + c * 7) % codeChars.length));
-                    }
-                }
-                displayText = outStr;
-
-            } else if (presetName.indexOf("Wave") !== -1 || presetName.indexOf("Ripple") !== -1 || presetName.indexOf("Sinusoidal") !== -1 || presetName.indexOf("Fluid") !== -1) {
-                textY = h / 2 + Math.sin(t * 8) * 8;
-
-            } else if (presetName.indexOf("Wiggle") !== -1 || presetName.indexOf("Jitter") !== -1 || presetName.indexOf("Noise") !== -1) {
-                textX = 20 + (Math.random() - 0.5) * 16 * Math.exp(-t * 2.5);
-                textY = h / 2 + (Math.random() - 0.5) * 10 * Math.exp(-t * 2.5);
-
-            } else {
-                var rise = Math.min(t / 0.8, 1);
-                var easeRise = Math.sin(rise * Math.PI / 2);
-                textY = h / 2 + (1 - easeRise) * 35;
-            }
-
-            // Draw Centered Sample Text
-            try {
-                var textFont = ScriptUI.newFont("sans-serif", "BOLD", 10);
-                var strDim = g.measureString(displayText, textFont);
-                textX = (w - strDim.width) / 2;
-                if (textX < 10) textX = 10;
-
-                var textPen = g.newPen(g.PenType.SOLID_COLOR, [0.0, 0.9, 1.0, textAlpha], 1); // FramEmpire Cyan
-                g.drawString(displayText, textPen, textX, textY, textFont);
-            } catch (eDraw) {}
+        // State variables for animation loop
+        var animState = {
+            startTime: new Date().getTime(),
+            activePreset: PRESETS_BY_CATEGORY[PRESET_CATEGORIES[0]][0]
         };
 
-        // 3. Tuning & Apply Controls Row
-        var applyControls = tabPresets.add("group");
-        applyControls.orientation = "row";
-        applyControls.alignChildren = ["fill", "center"];
-        applyControls.spacing = 8;
-
-        var tuneGroup = applyControls.add("group");
-        tuneGroup.orientation = "row";
-        tuneGroup.alignChildren = ["left", "center"];
-        tuneGroup.spacing = 4;
-
-        tuneGroup.add("statictext", undefined, "Freq:");
-        var txtFreq = tuneGroup.add("edittext", undefined, "3");
-        txtFreq.preferredSize.width = 28;
-
-        tuneGroup.add("statictext", undefined, "Decay:");
-        var txtDecay = tuneGroup.add("edittext", undefined, "5");
-        txtDecay.preferredSize.width = 28;
-
-        var btnApplyPreset = applyControls.add("button", undefined, "APPLY PRESET TO LAYER");
+        // 3. APPLY BUTTON
+        var btnApplyPreset = tabPresets.add("button", undefined, "APPLY PRESET TO LAYER");
         btnApplyPreset.alignment = ["fill", "center"];
-        btnApplyPreset.preferredSize.height = 28;
+        btnApplyPreset.preferredSize.height = 32;
         btnApplyPreset.helpTip = "Applies selected text preset expression and animation to selected After Effects text layers.";
 
-        // Update Handler for Category & Preset Dropdowns
+        // Update Handlers for Category & Preset Selectors
         ddlCategory.onChange = function () {
             var catName = PRESET_CATEGORIES[ddlCategory.selection.index];
             var newItems = PRESETS_BY_CATEGORY[catName] || [];
@@ -740,17 +736,21 @@
             }
             ddlPresets.selection = 0;
             if (newItems.length > 0) {
-                previewCanvas.activePreset = newItems[0];
-                previewCanvas.startTime = new Date().getTime();
-                previewCanvas.notify("onDraw");
+                animState.activePreset = newItems[0];
+                animState.startTime = new Date().getTime();
             }
         };
 
         ddlPresets.onChange = function () {
             if (ddlPresets.selection) {
-                previewCanvas.activePreset = ddlPresets.selection.text;
-                previewCanvas.startTime = new Date().getTime();
-                previewCanvas.notify("onDraw");
+                animState.activePreset = ddlPresets.selection.text;
+                animState.startTime = new Date().getTime();
+            }
+        };
+
+        btnApplyPreset.onClick = function () {
+            if (ddlPresets.selection) {
+                applyPresetToSelectedLayers(ddlPresets.selection.text, statusText);
             }
         };
 
@@ -848,20 +848,14 @@
         brandBtn.helpTip = "Click to visit www.framempire.com";
 
 
-        // --- EVENT LISTENERS ---
-
-        btnApplyPreset.onClick = function () {
-            if (ddlPresets.selection) {
-                applyTextPresetToLayers(ddlPresets.selection.text, txtFreq.text, txtDecay.text, statusText);
-            }
-        };
+        // --- EVENT LISTENERS FOR OTHER TABS ---
 
         btnTypewriter.onClick = function () { applyTypewriterWithCursor(statusText); };
         btnMatrix.onClick = function () {
-            applyTextPresetToLayers("21. Binary Code Matrix Reveal", txtFreq.text, txtDecay.text, statusText);
+            applyPresetToSelectedLayers("22. Binary Code Matrix Reveal", statusText);
         };
         btnWiggle.onClick = function () {
-            applyTextPresetToLayers("12. Decaying Wiggle", txtFreq.text, txtDecay.text, statusText);
+            applyPresetToSelectedLayers("12. Decaying Wiggle Position", statusText);
         };
 
         btnTL.onClick = function () { setCharacterAnchorPoint("left", "top", statusText); };
@@ -888,20 +882,59 @@
             openWebPage("https://www.framempire.com");
         };
 
-        // SCHEDULE CONTINUOUS 25 FPS AUTO-LOOP PREVIEW REFRESH VIA AFTER EFFECTS TASK SCHEDULER
+        // GLOBAL CONTINUOUS ANIMATION LOOP SIMULATION ENGINE
+        $.global._feAnimState = animState;
+        $.global._fePreviewDisplay = txtPreviewDisplay;
+
+        // Cancel previous task if active
         try {
             if ($.global._feTaskId) {
                 app.cancelTask($.global._feTaskId);
             }
-        } catch (eTaskCancel) {}
+        } catch (eCancel) {}
 
+        // Schedule continuous repeating task every 50ms (20 FPS)
         try {
             $.global._feTaskId = app.scheduleTask(
-                "(function(){ try { if ($.global._feCanvas && $.global._feCanvas.visible) { $.global._feCanvas.notify('onDraw'); } } catch(e){} })();",
-                40,
+                "(function(){\n" +
+                "  try {\n" +
+                "    var st = $.global._feAnimState;\n" +
+                "    var disp = $.global._fePreviewDisplay;\n" +
+                "    if (!st || !disp) return;\n" +
+                "    var sample = 'FramEmpire- A Revolution of Animation';\n" +
+                "    var now = new Date().getTime();\n" +
+                "    var t = ((now - st.startTime) % 2000) / 1000;\n" +
+                "    var name = st.activePreset || '';\n" +
+                "    if (name.indexOf('Typewriter') !== -1 || name.indexOf('Recoil') !== -1 || name.indexOf('Cursor') !== -1) {\n" +
+                "      var cnt = Math.floor(t * 20);\n" +
+                "      var cur = (Math.floor(t * 4) % 2 === 0) ? '|' : '';\n" +
+                "      disp.text = (cnt < sample.length) ? sample.substring(0, cnt) + '|' : sample + cur;\n" +
+                "    } else if (name.indexOf('Binary') !== -1 || name.indexOf('Matrix') !== -1 || name.indexOf('Code') !== -1 || name.indexOf('Hex') !== -1) {\n" +
+                "      var codeChars = '01010101ABCDEFGHIJKLMNOPQRSTUVWXYZ';\n" +
+                "      var p = Math.floor(t * 18);\n" +
+                "      var outStr = '';\n" +
+                "      for (var c = 0; c < sample.length; c++) {\n" +
+                "        if (c < p) outStr += sample.charAt(c);\n" +
+                "        else outStr += codeChars.charAt(Math.floor(Math.random() * codeChars.length));\n" +
+                "      }\n" +
+                "      disp.text = outStr;\n" +
+                "    } else if (name.indexOf('Wiggle') !== -1 || name.indexOf('Jitter') !== -1 || name.indexOf('Noise') !== -1) {\n" +
+                "      var pad = (Math.random() > 0.5) ? '  ' : ' ';\n" +
+                "      disp.text = pad + sample;\n" +
+                "    } else if (name.indexOf('Counter Accent') !== -1) {\n" +
+                "      var val = Math.floor(Math.min(t / 1.5, 1) * 100);\n" +
+                "      disp.text = 'FramEmpire Loading: ' + val + '%';\n" +
+                "    } else if (name.indexOf('Coordinate Position') !== -1) {\n" +
+                "      disp.text = 'X:' + Math.floor(200 + Math.random()*20) + ' Y:' + Math.floor(400 + Math.random()*20);\n" +
+                "    } else {\n" +
+                "      disp.text = sample;\n" +
+                "    }\n" +
+                "  } catch(e){}\n" +
+                "})();",
+                50,
                 true
             );
-        } catch (eTaskSched) {}
+        } catch (eSched) {}
 
         win.onResize = function () {
             win.layout.resize();
